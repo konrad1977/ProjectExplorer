@@ -19,7 +19,7 @@ enum TerminalColor: String {
     case white = "\u{001B}[0;37m"
 }
 
-private func colorPrint(color: TerminalColor, text: String) {
+private func printWithColor(_ color: TerminalColor, _ text: String) {
     print(color.rawValue + text + TerminalColor.reset.rawValue)
 }
 
@@ -34,34 +34,34 @@ extension Fileinfo {
 }
 
 struct Program {
-    
+
     private func executablePath() -> IO<String> {
         guard let path = Bundle.main.resourcePath
         else { return IO { "" } }
         return IO { path }
     }
-    
+
     private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
         guard let paths = try? FileManager.default
                 .subpathsOfDirectory(atPath: path)
                 .filter({ $0.hasSuffix(".swift") })
-        
+
         else { return IO { [] } }
         return IO { paths }
     }
-    
-    private func analysePaths(_ paths: [String]) -> IO<[Fileinfo]> {
+
+    private func analyseSubpaths(_ paths: [String]) -> IO<[Fileinfo]> {
         IO { paths
             .map(analysePath)
             .map { $0.unsafeRun() }
             .sorted(by: { $0.filename < $1.filename })
         }
     }
-    
+
     private func startProgramWithMessage(_ message: String) -> IO<Void> {
-        IO { colorPrint(color: .yellow, text: message) }
+        IO { printWithColor(.yellow, message) }
     }
-    
+
     private func analysePath(_ path: String) -> IO<Fileinfo> {
         let (linecount, comments) = fileFromPath(path)
             .flatmap {
@@ -70,23 +70,23 @@ struct Program {
                     commentInSourceFile($0)
                 )
             }.unsafeRun()
-        
+
         let filename = URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent
-        
+
         return IO { Fileinfo(filename: filename, linecount: linecount, comments: comments) }
     }
-    
+
     private func fileFromPath(_ path: String) -> IO<String> {
         guard let file = try? String(contentsOfFile: path, encoding: .ascii)
         else { return IO { "" } }
-        
+
         return IO { file }
     }
-    
+
     private func linecountForSourceFile(_ sourceFile: String) -> IO<Int> {
         IO { sourceFile.components(separatedBy: .newlines).count }
     }
-    
+
     private func commentInSourceFile(_ sourceFile: String) -> IO<Int> {
         let comments = sourceFile
             .components(separatedBy: "//").count
@@ -94,21 +94,21 @@ struct Program {
             sourceFile.components(separatedBy: "/*").count
         return IO { comments }
     }
-    
-    private func printSummary(_ fileInfos: [Fileinfo]) -> IO<Void> {
+
+    private func summary(_ fileInfos: [Fileinfo]) -> IO<Void> {
         zip(
-            printFilelist(fileInfos),
+            outputFilelist(fileInfos),
             repeatString("⎻", count: 60),
-            printProjectSummary(fileInfos),
+            outputProjectSummary(fileInfos),
             repeatString("⎼", count: 60)
         ).map { _ in }
     }
-    
+
     private func repeatString(_ char: Character, count: Int) -> IO<Void> {
-        IO { colorPrint(color: .yellow, text: String(repeating: char, count: count)) }
+        IO { printWithColor(.yellow, String(repeating: char, count: count)) }
     }
-    
-    private func printFilelist(_ infos: [Fileinfo]) -> IO<Void> {
+
+    private func outputFilelist(_ infos: [Fileinfo]) -> IO<Void> {
         IO {
             infos.forEach {
                 let lineCount = "\(TerminalColor.red.rawValue + "\($0.linecount)" + TerminalColor.reset.rawValue)"
@@ -116,14 +116,16 @@ struct Program {
             }
         }
     }
-    
-    private func printProjectSummary(_ infos: [Fileinfo]) -> IO<Void> {
+
+    private func outputProjectSummary(_ infos: [Fileinfo]) -> IO<Void> {
         let totalFiles = infos.count
-        let totalLines = infos.reduce(0) { acc, fileInfo in acc + fileInfo.linecount }
-        let totalComments = infos.reduce(0) { acc, fileInfo in acc + fileInfo.comments }
-        
+        let (totalLines, totalComments) = infos.reduce(into: (0, 0)) { acc, fileInfo in
+            acc.0 += fileInfo.linecount
+            acc.1 += fileInfo.comments
+        }
+
         return IO {
-            
+
             let lineCount = "Swift files:\(TerminalColor.red.rawValue + "\(totalFiles)" + TerminalColor.reset.rawValue)"
             let separator = "\(TerminalColor.yellow.rawValue + " • " + TerminalColor.reset.rawValue)"
             let codeLines = "Code lines:\(TerminalColor.red.rawValue + "\(totalLines)" + TerminalColor.reset.rawValue)"
@@ -131,12 +133,12 @@ struct Program {
             print("\(lineCount)\(separator)\(codeLines)\(separator)\(comments)")
         }
     }
-    
+
     func start() -> IO<Void> {
         startProgramWithMessage("Analysing path. Stand by...")
             .flatmap(executablePath)
             .flatmap(subdirectoriesFromPath)
-            .flatmap(analysePaths)
-            .flatmap(printSummary)
+            .flatmap(analyseSubpaths)
+            .flatmap(summary)
     }
 }
