@@ -53,28 +53,6 @@ struct Program {
 		return IO { paths }
 	}
 
-	private func analyzeSubpaths(_ paths: [String]) -> IO<[Fileinfo]> {
-		IO { paths
-			.map(analyzePath)
-			.map { $0.unsafeRun() }
-			.sorted(by: { $0.filename < $1.filename })
-		}
-	}
-
-	private func startProgramWithMessage(_ message: String) -> IO<Void> {
-		IO { printWithColor(.yellow, message) }
-	}
-
-	private func fileInfoCounting(_ path: String) -> IO<(Int, Int)> {
-		fileFromPath(path)
-		.flatmap {
-			zip(
-				linecountForSourceFile($0),
-				commentInSourceFile($0)
-			)
-		}
-	}
-
 	private func analyzePath(_ path: String) -> IO<Fileinfo> {
 
 		let (linecount, comments) = fileInfoCounting(path)
@@ -92,18 +70,40 @@ struct Program {
 		}
 	}
 
-	private func fileFromPath(_ path: String) -> IO<String.SubSequence> {
+	private func analyzeSubpaths(_ paths: [String]) -> IO<[Fileinfo]> {
+		IO { paths
+			.map(analyzePath)
+			.map { $0.unsafeRun() }
+			.sorted(by: { $0.filename < $1.filename })
+		}
+	}
+
+	private func startProgramWithMessage(_ message: String) -> IO<Void> {
+		IO { printWithColor(.yellow, message) }
+	}
+
+	private func fileInfoCounting(_ path: String) -> IO<(Int, Int)> {
+		sourceFile(for: path)
+		.flatmap { source in
+			zip(
+				countLinesIn(sourceFile:source),
+				countCommentIn(sourceFile:source)
+			)
+		}
+	}
+
+	private func sourceFile(for path: String) -> IO<String.SubSequence> {
 		guard let file = try? String(contentsOfFile: path, encoding: .ascii)[...]
 		else { return IO { "" } }
 
 		return IO { file }
 	}
 
-	private func linecountForSourceFile(_ sourceFile: String.SubSequence) -> IO<Int> {
+	private func countLinesIn(sourceFile: String.SubSequence) -> IO<Int> {
 		IO { sourceFile.components(separatedBy: .newlines).count }
 	}
 
-	private func commentInSourceFile(_ sourceFile: String.SubSequence) -> IO<Int> {
+	private func countCommentIn(sourceFile: String.SubSequence) -> IO<Int> {
 		let comments = sourceFile
 			.components(separatedBy: "//").count
 			+
@@ -188,7 +188,10 @@ struct Program {
 			kotlinFiles
 		).map { _ in }
 	}
+}
 
+// MARK: - Public
+extension Program {
 	func start() -> IO<Void> {
 		startProgramWithMessage("Analyzing current path. Stand by...")
 			.flatmap(executablePath)
