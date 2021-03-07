@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TerminalColor: String {
+fileprivate enum TerminalColor: String {
 	case reset = "\u{001B}[0;0m"
 	case black = "\u{001B}[0;30m"
 	case red = "\u{001B}[0;31m"
@@ -23,7 +23,15 @@ private func printWithColor(_ color: TerminalColor, _ text: String) {
 	print(color.rawValue + text + TerminalColor.reset.rawValue)
 }
 
-extension Predicate where A == String {
+private func textWithColor(_ color: TerminalColor, _ text: String) -> String {
+	color.rawValue + text + TerminalColor.reset.rawValue
+}
+
+private func textWithColor(_ color: TerminalColor, _ any: Any) -> String {
+	color.rawValue + "\(any)" + TerminalColor.reset.rawValue
+}
+
+fileprivate extension Predicate where A == String {
 	static var supportedFiletypes = Predicate {
 		$0.hasSuffix(".swift") ||
 			$0.hasSuffix(".m") ||
@@ -53,7 +61,7 @@ struct Program {
 		return IO { paths }
 	}
 
-	private func analyzePath(_ path: String) -> IO<Fileinfo> {
+	private func createFileInfo(_ path: String) -> IO<Fileinfo> {
 
 		let (linecount, comments) = fileInfoCounting(path)
 			.unsafeRun()
@@ -72,7 +80,7 @@ struct Program {
 
 	private func analyzeSubpaths(_ paths: [String]) -> IO<[Fileinfo]> {
 		IO { paths
-			.map(analyzePath)
+			.map(createFileInfo)
 			.map { $0.unsafeRun() }
 			.sorted(by: { $0.filename < $1.filename })
 		}
@@ -127,8 +135,7 @@ struct Program {
 	private func outputFilelist(_ infos: [Fileinfo]) -> IO<Void> {
 		IO {
 			infos.forEach {
-				let lineCount = "\(TerminalColor.red.rawValue + "\($0.linecount)" + TerminalColor.reset.rawValue)"
-				print("\($0.filename):\(lineCount)")
+				print("\($0.filename): + \(textWithColor(.red, $0.linecount))")
 			}
 		}
 	}
@@ -145,12 +152,11 @@ struct Program {
 		}
 
 		return IO {
-
-			let lineCount = "\(filetype.description) files: \(TerminalColor.red.rawValue + "\(totalFiles)" + TerminalColor.reset.rawValue)"
-			let separator = "\(TerminalColor.yellow.rawValue + " • " + TerminalColor.reset.rawValue)"
-			let codeLines = "lines: \(TerminalColor.red.rawValue + "\(totalLines)" + TerminalColor.reset.rawValue)"
-			let comments = "comments: \(TerminalColor.red.rawValue + "\(totalComments)" + TerminalColor.reset.rawValue)"
-			print("[\(lineCount)\(separator)\(codeLines)\(separator)\(comments)]")
+			let lineCount = "\(filetype.description) files: \(textWithColor(.red, totalFiles))"
+			let separator = textWithColor(.yellow, " • ")
+			let codeLines = "lines: \(textWithColor(.red, totalLines))"
+			let comments = "comments: \(textWithColor(.red, totalComments))"
+			print("[\(lineCount + separator + codeLines + separator + comments)]")
 		}
 	}
 
