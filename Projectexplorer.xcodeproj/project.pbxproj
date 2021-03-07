@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C18769B525F513D300AFACDC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769B425F513D300AFACDC /* main.swift */; };
+		C18769BE25F513E700AFACDC /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769BD25F513E700AFACDC /* IO.swift */; };
+		C18769C125F5143E00AFACDC /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769C025F5143E00AFACDC /* Program.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,8 @@
 /* Begin PBXFileReference section */
 		C18769B125F513D300AFACDC /* Projectexplorer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Projectexplorer; sourceTree = BUILT_PRODUCTS_DIR; };
 		C18769B425F513D300AFACDC /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C18769BD25F513E700AFACDC /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
+		C18769C025F5143E00AFACDC /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +61,19 @@
 		C18769B325F513D300AFACDC /* Projectexplorer */ = {
 			isa = PBXGroup;
 			children = (
+				C18769BC25F513DB00AFACDC /* Monads */,
 				C18769B425F513D300AFACDC /* main.swift */,
+				C18769C025F5143E00AFACDC /* Program.swift */,
 			);
 			path = Projectexplorer;
+			sourceTree = "<group>";
+		};
+		C18769BC25F513DB00AFACDC /* Monads */ = {
+			isa = PBXGroup;
+			children = (
+				C18769BD25F513E700AFACDC /* IO.swift */,
+			);
+			path = Monads;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -120,6 +134,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C18769B525F513D300AFACDC /* main.swift in Sources */,
+				C18769BE25F513E700AFACDC /* IO.swift in Sources */,
+				C18769C125F5143E00AFACDC /* Program.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +260,7 @@
 		C18769B925F513D300AFACDC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y8D48XMJNZ;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -255,6 +272,7 @@
 		C18769BA25F513D300AFACDC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y8D48XMJNZ;
 				ENABLE_HARDENED_RUNTIME = YES;

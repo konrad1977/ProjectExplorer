@@ -7,5 +7,7 @@
 
 import Foundation
 
-print("Hello, World!")
+Program()
+	.start()
+	.unsafeRun()
 
