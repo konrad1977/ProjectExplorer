@@ -4,3 +4,10 @@ A simple CLI tool to analyse how many code files, lines of code and comments a p
 <p align="center">
   <img src="https://raw.githubusercontent.com/konrad1977/ProjectExplorer/main/screenshots/first.png" alt="Icon"/>
 </p>
+
+### Supported filetypes:
+- Kotlin (.kt, .kts, .ktm)
+- Cpp (.cpp, .mm)
+- C (.c)
+- Swift (.swift)
+- Objective-C (.m)
