@@ -63,10 +63,15 @@ struct Program {
 	}
 
 	private func analysePath(_ path: String) -> IO<Fileinfo> {
-        let sourceFile = fileFromPath(path).unsafeRun()
-        let linecount = linecountForSourceFile(sourceFile).unsafeRun()
-        let comments = commentInSourceFile(sourceFile).unsafeRun()
-		let filename = URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent
+        let (linecount, comments) = fileFromPath(path)
+            .flatmap {
+            zip(
+                linecountForSourceFile($0),
+                commentInSourceFile($0)
+            )
+        }.unsafeRun()
+
+        let filename = URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent
 
 		return IO { Fileinfo(filename: filename, linecount: linecount, comments: comments) }
 	}
@@ -83,7 +88,11 @@ struct Program {
 	}
 
     private func commentInSourceFile(_ sourceFile: String) -> IO<Int> {
-        IO { sourceFile.components(separatedBy: "//").count }
+        let comments = sourceFile
+            .components(separatedBy: "//").count
+            +
+            sourceFile.components(separatedBy: "/*").count
+        return IO { comments }
     }
 
 	private func printSummary(_ fileInfos: [Fileinfo]) -> IO<Void> {
