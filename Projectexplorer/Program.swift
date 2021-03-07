@@ -23,14 +23,17 @@ private func printWithColor(_ color: TerminalColor, _ text: String) {
     print(color.rawValue + text + TerminalColor.reset.rawValue)
 }
 
-struct Fileinfo {
-    let filename: String
-    let linecount: Int
-    let comments: Int
-}
-
-extension Fileinfo {
-    static var empty = Fileinfo(filename: "", linecount: 0, comments: 0)
+extension Predicate where A == String {
+	static var supportedFiletypes = Predicate {
+		$0.hasSuffix(".swift") ||
+		$0.hasSuffix(".m") ||
+		$0.hasSuffix(".cpp") ||
+		$0.hasSuffix(".mm") ||
+		$0.hasSuffix(".c") ||
+		$0.hasSuffix(".kt") ||
+		$0.hasSuffix(".ktm") ||
+		$0.hasSuffix(".kts")
+	}
 }
 
 struct Program {
@@ -44,15 +47,15 @@ struct Program {
     private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
         guard let paths = try? FileManager.default
                 .subpathsOfDirectory(atPath: path)
-                .filter({ $0.hasSuffix(".swift") })
+				.filter(Predicate.supportedFiletypes.contains)
 
         else { return IO { [] } }
         return IO { paths }
     }
 
-    private func analyseSubpaths(_ paths: [String]) -> IO<[Fileinfo]> {
+    private func analyzeSubpaths(_ paths: [String]) -> IO<[Fileinfo]> {
         IO { paths
-            .map(analysePath)
+            .map(analyzePath)
             .map { $0.unsafeRun() }
             .sorted(by: { $0.filename < $1.filename })
         }
@@ -62,7 +65,7 @@ struct Program {
         IO { printWithColor(.yellow, message) }
     }
 
-    private func analysePath(_ path: String) -> IO<Fileinfo> {
+    private func analyzePath(_ path: String) -> IO<Fileinfo> {
         let (linecount, comments) = fileFromPath(path)
             .flatmap {
                 zip(
@@ -71,23 +74,32 @@ struct Program {
                 )
             }.unsafeRun()
 
-        let filename = URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent
+		let url = URL(fileURLWithPath: path)
+		let filetype = Filetype(extension: url.pathExtension)
+        let filename = url.deletingPathExtension().lastPathComponent
 
-        return IO { Fileinfo(filename: filename, linecount: linecount, comments: comments) }
+        return IO {
+			Fileinfo(
+				filename: filename,
+				linecount: linecount,
+				comments: comments,
+				filetype: filetype
+			)
+		}
     }
 
-    private func fileFromPath(_ path: String) -> IO<String> {
-        guard let file = try? String(contentsOfFile: path, encoding: .ascii)
+	private func fileFromPath(_ path: String) -> IO<String.SubSequence> {
+		guard let file = try? String(contentsOfFile: path, encoding: .ascii)[...]
         else { return IO { "" } }
 
         return IO { file }
     }
 
-    private func linecountForSourceFile(_ sourceFile: String) -> IO<Int> {
+	private func linecountForSourceFile(_ sourceFile: String.SubSequence) -> IO<Int> {
         IO { sourceFile.components(separatedBy: .newlines).count }
     }
 
-    private func commentInSourceFile(_ sourceFile: String) -> IO<Int> {
+	private func commentInSourceFile(_ sourceFile: String.SubSequence) -> IO<Int> {
         let comments = sourceFile
             .components(separatedBy: "//").count
             +
@@ -97,10 +109,10 @@ struct Program {
 
     private func summary(_ fileInfos: [Fileinfo]) -> IO<Void> {
         zip(
-            outputFilelist(fileInfos),
-            repeatString("⎻", count: 60),
+            //outputFilelist(fileInfos),
+            repeatString("⎻", count: 75),
             outputProjectSummary(fileInfos),
-            repeatString("⎼", count: 60)
+            repeatString("⎼", count: 75)
         ).map { _ in }
     }
 
@@ -117,28 +129,67 @@ struct Program {
         }
     }
 
-    private func outputProjectSummary(_ infos: [Fileinfo]) -> IO<Void> {
-        let totalFiles = infos.count
-        let (totalLines, totalComments) = infos.reduce(into: (0, 0)) { acc, fileInfo in
-            acc.0 += fileInfo.linecount
-            acc.1 += fileInfo.comments
-        }
+	private func summaryOutputForFiletype(_ filetype: Filetype, fileInfo: [Fileinfo]) -> IO<Void> {
 
-        return IO {
+		guard fileInfo.count > 0
+		else { return IO { } }
 
-            let lineCount = "Swift files:\(TerminalColor.red.rawValue + "\(totalFiles)" + TerminalColor.reset.rawValue)"
-            let separator = "\(TerminalColor.yellow.rawValue + " • " + TerminalColor.reset.rawValue)"
-            let codeLines = "Code lines:\(TerminalColor.red.rawValue + "\(totalLines)" + TerminalColor.reset.rawValue)"
-            let comments = "comments:\(TerminalColor.red.rawValue + "\(totalComments)" + TerminalColor.reset.rawValue)"
-            print("\(lineCount)\(separator)\(codeLines)\(separator)\(comments)")
-        }
+		let totalFiles = fileInfo.count
+		let (totalLines, totalComments) = fileInfo.reduce(into: (0, 0)) { acc, fileInfo in
+			acc.0 += fileInfo.linecount
+			acc.1 += fileInfo.comments
+		}
+
+		return IO {
+
+			let lineCount = "\(filetype.description) files: \(TerminalColor.red.rawValue + "\(totalFiles)" + TerminalColor.reset.rawValue)"
+			let separator = "\(TerminalColor.yellow.rawValue + " • " + TerminalColor.reset.rawValue)"
+			let codeLines = "lines: \(TerminalColor.red.rawValue + "\(totalLines)" + TerminalColor.reset.rawValue)"
+			let comments = "comments: \(TerminalColor.red.rawValue + "\(totalComments)" + TerminalColor.reset.rawValue)"
+			print("[\(lineCount)\(separator)\(codeLines)\(separator)\(comments)]")
+		}
+	}
+
+	private func fileInfoFor(filetype: Filetype, info: [Fileinfo]) -> IO<(Filetype, [Fileinfo])> {
+		IO { (filetype, info.filter { $0.filetype == filetype }) }
+	}
+
+    private func outputProjectSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
+
+		let cFiles =
+			fileInfoFor(filetype: .c, info: fileInfo)
+			.flatmap(summaryOutputForFiletype)
+
+		let cppFiles =
+			fileInfoFor(filetype: .cpp, info: fileInfo)
+			.flatmap(summaryOutputForFiletype)
+
+		let swiftFiles =
+			fileInfoFor(filetype: .swift, info: fileInfo)
+			.flatmap(summaryOutputForFiletype)
+
+		let objcFiles =
+			fileInfoFor(filetype: .objectiveC, info: fileInfo)
+			.flatmap(summaryOutputForFiletype)
+
+		let kotlinFiles =
+			fileInfoFor(filetype: .kotlin, info: fileInfo)
+			.flatmap(summaryOutputForFiletype)
+
+		return zip(
+			cFiles,
+			swiftFiles,
+			objcFiles,
+			cppFiles,
+			kotlinFiles
+		).map { _ in }
     }
 
     func start() -> IO<Void> {
-        startProgramWithMessage("Analysing path. Stand by...")
+        startProgramWithMessage("Analyzing current path. Stand by...")
             .flatmap(executablePath)
             .flatmap(subdirectoriesFromPath)
-            .flatmap(analyseSubpaths)
+            .flatmap(analyzeSubpaths)
             .flatmap(summary)
     }
 }

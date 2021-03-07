@@ -43,3 +43,13 @@ func zip<A, B, C, D>(
 ) -> IO<(A, B, C, D)> {
 	zip(first, zip(second, third, forth)).map { ($0, $1.0, $1.1, $1.2) }
 }
+
+func zip<A, B, C, D, E>(
+	_ first: IO<A>,
+	_ second: IO<B>,
+	_ third: IO<C>,
+	_ forth: IO<D>,
+	_ fifth: IO<E>
+) -> IO<(A, B, C, D, E)> {
+	zip(first, zip(second, third, forth, fifth)).map { ($0, $1.0, $1.1, $1.2, $1.3) }
+}
