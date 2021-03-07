@@ -44,6 +44,7 @@ struct Program {
 		guard let path = Bundle.main.resourcePath
 		else { return IO { "" } }
 
+        print(path)
 		return IO { path }
 	}
 
