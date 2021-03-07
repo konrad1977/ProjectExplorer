@@ -65,24 +65,29 @@ struct Program {
 		IO { printWithColor(.yellow, message) }
 	}
 
+	private func fileInfoCounting(_ path: String) -> IO<(Int, Int)> {
+		fileFromPath(path)
+		.flatmap {
+			zip(
+				linecountForSourceFile($0),
+				commentInSourceFile($0)
+			)
+		}
+	}
+
 	private func analyzePath(_ path: String) -> IO<Fileinfo> {
-		let (linecount, comments) = fileFromPath(path)
-			.flatmap {
-				zip(
-					linecountForSourceFile($0),
-					commentInSourceFile($0)
-				)
-			}.unsafeRun()
+
+		let (linecount, comments) = fileInfoCounting(path)
+			.unsafeRun()
 
 		return IO {
 			URL(fileURLWithPath: path)
-		}
-		.map {
+		}.map { url in
 			Fileinfo(
-				filename: $0.deletingPathExtension().lastPathComponent,
+				filename: url.deletingPathExtension().lastPathComponent,
 				linecount: linecount,
 				comments: comments,
-				filetype: Filetype(extension: $0.pathExtension)
+				filetype: Filetype(extension: url.pathExtension)
 			)
 		}
 	}
@@ -174,7 +179,7 @@ struct Program {
 		let kotlinFiles =
 			fileInfoFor(filetype: .kotlin, info: fileInfo)
 			.flatmap(summaryOutputForFiletype)
-		
+
 		return zip(
 			cFiles,
 			swiftFiles,
