@@ -8,6 +8,7 @@
 import Foundation
 
 enum Filetype {
+    case all
 	case c
 	case cpp
 	case kotlin
@@ -48,7 +49,9 @@ extension Filetype {
 			return "Objective-C"
 		case .none:
 			return ""
-		}
+        case .all:
+            return "All"
+        }
 	}
 }
 

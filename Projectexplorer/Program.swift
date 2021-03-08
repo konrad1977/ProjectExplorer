@@ -118,10 +118,11 @@ struct Program {
 
 	private func summary(_ fileInfos: [Fileinfo]) -> IO<Void> {
 		zip(
-			//outputFilelist(fileInfos),
 			repeatString("⎻", count: 75),
-			outputProjectSummary(fileInfos),
-			repeatString("⎼", count: 75)
+			outputLanguageSpecificSummary(fileInfos),
+			repeatString("⎼", count: 75),
+            outputTotalSummary(fileInfos),
+            repeatString("⎼", count: 75)
 		).map { _ in }
 	}
 
@@ -161,7 +162,11 @@ struct Program {
 		IO { (filetype, info.filter { $0.filetype == filetype }) }
 	}
 
-	private func outputProjectSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
+    private func outputTotalSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
+        summaryOutputForFiletype(.all, fileInfo: fileInfo)
+    }
+
+	private func outputLanguageSpecificSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 
 		let cFiles =
 			fileInfoFor(filetype: .c, info: fileInfo)
