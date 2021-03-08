@@ -19,10 +19,6 @@ fileprivate enum TerminalColor: String {
 	case white = "\u{001B}[0;37m"
 }
 
-private func printWithColor(_ color: TerminalColor, _ text: String) {
-	print(color.rawValue + text + TerminalColor.reset.rawValue)
-}
-
 private func textWithColor(_ color: TerminalColor, _ text: String) -> String {
 	color.rawValue + text + TerminalColor.reset.rawValue
 }
@@ -49,6 +45,7 @@ struct Program {
 	private func executablePath() -> IO<String> {
 		guard let path = Bundle.main.resourcePath
 		else { return IO { "" } }
+		print(path)
 		return IO { path }
 	}
 
@@ -87,7 +84,7 @@ struct Program {
 	}
 
 	private func startProgramWithMessage(_ message: String) -> IO<Void> {
-		IO { printWithColor(.yellow, message) }
+		IO { print(textWithColor(.yellow, message)) }
 	}
 
 	private func fileInfoCounting(_ path: String) -> IO<(Int, Int)> {
@@ -129,7 +126,7 @@ struct Program {
 	}
 
 	private func repeatString(_ char: Character, count: Int) -> IO<Void> {
-		IO { printWithColor(.yellow, String(repeating: char, count: count)) }
+		IO { print(textWithColor(.yellow, String(repeating: char, count: count))) }
 	}
 
 	private func outputFilelist(_ infos: [Fileinfo]) -> IO<Void> {
@@ -194,15 +191,44 @@ struct Program {
 			kotlinFiles
 		).map { _ in }
 	}
+
+	private func calculateTime(block: @escaping () -> IO<Void>) -> IO<Double> {
+		IO {
+			let start = DispatchTime.now()
+			block().unsafeRun()
+			let end = DispatchTime.now()
+			let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+			return Double(nanoTime) / 1_000_000_000
+		}
+	}
+
+	private func outputTimemeasure(time: Double) -> IO<Void> {
+		IO {
+			print("Total time: \(textWithColor(.green, time)) seconds")
+		}
+	}
+
+	private func roundToDecimals(_ places: Double) -> (Double) -> IO<Double> {
+		return { value in
+			IO<Double> {
+				let divisor = pow(10.0, Double(places))
+				return (value * divisor).rounded() / divisor
+			}
+		}
+	}
 }
 
 // MARK: - Public
 extension Program {
 	func start() -> IO<Void> {
-		startProgramWithMessage("Analyzing current path. Stand by...")
-			.flatmap(executablePath)
-			.flatmap(subdirectoriesFromPath)
-			.flatmap(analyzeSubpaths)
-			.flatmap(summary)
+		calculateTime {
+			startProgramWithMessage("Analyzing current path. Stand by...")
+				.flatmap(executablePath)
+				.flatmap(subdirectoriesFromPath)
+				.flatmap(analyzeSubpaths)
+				.flatmap(summary)
+		}
+		.flatmap(roundToDecimals(2))
+		.flatmap(outputTimemeasure(time:))
 	}
 }
