@@ -31,10 +31,8 @@ fileprivate extension Predicate where A == String {
 	static var supportedFiletypes = Predicate {
 		$0.hasSuffix(".swift") ||
 		$0.hasSuffix(".m") ||
-		$0.hasSuffix(".cpp") ||
 		$0.hasSuffix(".mm") ||
 		$0.hasSuffix(".h") ||
-		$0.hasSuffix(".c") ||
 		$0.hasSuffix(".kt") ||
 		$0.hasSuffix(".ktm") ||
 		$0.hasSuffix(".kts")
@@ -171,14 +169,6 @@ struct Program {
 
 	private func outputLanguageSpecificSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 
-		let cFiles =
-			fileInfoFor(filetype: .c, info: fileInfo)
-			.flatmap(summaryOutputForFiletype)
-
-		let cppFiles =
-			fileInfoFor(filetype: .cpp, info: fileInfo)
-			.flatmap(summaryOutputForFiletype)
-
 		let swiftFiles =
 			fileInfoFor(filetype: .swift, info: fileInfo)
 			.flatmap(summaryOutputForFiletype)
@@ -193,10 +183,8 @@ struct Program {
 
 		return zip(
 			repeatString("—", count: 35),
-			cFiles,
 			swiftFiles,
 			objcFiles,
-			cppFiles,
 			kotlinFiles
 		).map { _ in }
 	}

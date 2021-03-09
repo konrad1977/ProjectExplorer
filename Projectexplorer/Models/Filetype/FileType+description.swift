@@ -10,10 +10,6 @@ import Foundation
 extension Filetype {
 	var description: String {
 		switch self {
-		case .c:
-			return "C"
-		case .cpp:
-			return "C++"
 		case .kotlin:
 			return "Kotlin"
 		case .swift:

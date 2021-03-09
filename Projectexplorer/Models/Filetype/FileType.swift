@@ -9,8 +9,6 @@ import Foundation
 
 enum Filetype {
 	case all
-	case c
-	case cpp
 	case kotlin
 	case swift
 	case objectiveC
@@ -18,10 +16,6 @@ enum Filetype {
 
 	init(extension: String) {
 		switch `extension` {
-		case "c":
-			self = .c
-		case "cpp", "mm", "cc":
-			self = .cpp
 		case "kt", "kts", "ktm":
 			self = .kotlin
 		case "m":

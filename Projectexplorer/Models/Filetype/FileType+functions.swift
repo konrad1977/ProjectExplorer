@@ -11,10 +11,6 @@ extension Filetype {
 	
 	var functions: String {
 		switch self {
-		case .c:
-			return "() "
-		case .cpp:
-			return "() "
 		case .kotlin:
 			return "fun "
 		case .swift:
