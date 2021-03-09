@@ -48,7 +48,12 @@ struct Program {
 	}
 
 	private func executablePath() -> IO<String> {
-		IO { FileManager.default.currentDirectoryPath }
+		IO {
+			//let path =
+				FileManager.default.currentDirectoryPath
+//			print(path)
+//			return path
+		}
 	}
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
@@ -112,13 +117,12 @@ struct Program {
 	private func summary(_ fileInfos: [Fileinfo]) -> IO<Void> {
 		zip(
 			outputLanguageSpecificSummary(fileInfos),
-			repeatString("⎼", count: 75),
             outputTotalSummary(fileInfos)
 		).map { _ in }
 	}
 
 	private func repeatString(_ char: Character, count: Int) -> IO<Void> {
-		IO { print(textWithColor(.yellow, String(repeating: char, count: count))) }
+		IO { print(textWithColor(.blue, String(repeating: char, count: count))) }
 	}
 
 	private func outputFilelist(_ infos: [Fileinfo]) -> IO<Void> {
@@ -145,23 +149,16 @@ struct Program {
 		}
 
 		let info = IO {
-			let classes = "classes: \(textWithColor(.magenta, classes))"
-			let structs = "structs: \(textWithColor(.magenta, structs))"
-			let enums = "enums: \(textWithColor(.magenta, enums))"
-			let interfaces = "interfaces: \(textWithColor(.magenta, interfaces))"
-			let functions = "functions: \(textWithColor(.magenta, functions))"
-			let lines = "lines: \(textWithColor(.magenta, lines))"
-
 			print(textWithColor(.red, filetype.description))
-			print("Files: \(textWithColor(.red, fileInfo.count))")
-			print(lines)
-			print(classes)
-			print(structs)
-			print(enums)
-			print(functions)
-			print(interfaces)
+			print("Files: \(textWithColor(.yellow, fileInfo.count))")
+			print("lines: \(textWithColor(.red, lines))")
+			print("classes: \(textWithColor(.blue, classes))")
+			print("structs: \(textWithColor(.green, structs))")
+			print("enums: \(textWithColor(.cyan, enums))")
+			print("functions: \(textWithColor(.white, functions))")
+			print("interfaces: \(textWithColor(.magenta, interfaces))")
 		}
-		return zip(info, repeatString("-", count: 75)).map { _ in }
+		return zip(info, repeatString("—", count: 24)).map { _ in }
 	}
 
 	private func fileInfoFor(filetype: Filetype, info: [Fileinfo]) -> IO<(Filetype, [Fileinfo])> {
@@ -195,6 +192,7 @@ struct Program {
 			.flatmap(summaryOutputForFiletype)
 
 		return zip(
+			repeatString("—", count: 35),
 			cFiles,
 			swiftFiles,
 			objcFiles,
@@ -215,7 +213,7 @@ struct Program {
 
 	private func outputTimemeasure(time: Double) -> IO<Void> {
 		IO {
-			print("Total time: \(textWithColor(.green, time)) seconds")
+			print("Total time: \(textWithColor(.red, time)) seconds")
 		}
 	}
 

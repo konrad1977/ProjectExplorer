@@ -10,27 +10,27 @@ import Foundation
 enum SourceFileAnalysis {
 
 	static func countFunctions(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
-		{ str in IO { str.components(separatedBy: filetype.functions).count - 1} }
+		{ str in IO { str.countInstances(of: filetype.functions) } }
 	}
 
 	static func countInterfaces(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
-		{ str in IO { str.components(separatedBy: filetype.interfaces).count - 1} }
+		{ str in IO { str.countInstances(of: filetype.interfaces) } }
 	}
 
 	static func countClasses(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
-		{ str in IO { str.components(separatedBy: filetype.classes).count - 1} }
+		{ str in IO { str.countInstances(of: filetype.classes) } }
 	}
 
 	static func countExtensions(sourceFile: String.SubSequence) -> IO<Int> {
-		IO { sourceFile.components(separatedBy: "extension ").count - 1}
+		IO { sourceFile.countInstances(of:"extension ") }
 	}
 
 	static func countEnums(sourceFile: String.SubSequence) -> IO<Int> {
-		IO { sourceFile.components(separatedBy: "enum ").count - 1}
+		IO { sourceFile.countInstances(of: "enum ") }
 	}
 
 	static func countStructs(sourceFile: String.SubSequence) -> IO<Int> {
-		IO { sourceFile.components(separatedBy: "struct ").count - 1 }
+		IO { sourceFile.countInstances(of: "struct ") }
 	}
 
 	static func countLinesIn(sourceFile: String.SubSequence) -> IO<Int> {
@@ -38,10 +38,6 @@ enum SourceFileAnalysis {
 	}
 
 	static func countCommentIn(sourceFile: String.SubSequence) -> IO<Int> {
-		let comments = sourceFile
-			.components(separatedBy: "//").count - 1
-			+
-			sourceFile.components(separatedBy: "/*").count - 1
-		return IO { comments }
+		return IO { sourceFile.countInstances(of: "//") + sourceFile.countInstances(of: "/*")   }
 	}
 }

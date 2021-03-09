@@ -18,6 +18,7 @@
 		C1F1415425F7EEAA001AE8D7 /* FileType+description.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1415325F7EEAA001AE8D7 /* FileType+description.swift */; };
 		C1F1415725F7F032001AE8D7 /* FileType+interfaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1415625F7F032001AE8D7 /* FileType+interfaces.swift */; };
 		C1F1415A25F7F39B001AE8D7 /* FileType+classes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F1415925F7F39A001AE8D7 /* FileType+classes.swift */; };
+		C1F32C1C25F8058700410BB2 /* SubString+count.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F32C1B25F8058700410BB2 /* SubString+count.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,7 @@
 		C1F1415325F7EEAA001AE8D7 /* FileType+description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileType+description.swift"; sourceTree = "<group>"; };
 		C1F1415625F7F032001AE8D7 /* FileType+interfaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileType+interfaces.swift"; sourceTree = "<group>"; };
 		C1F1415925F7F39A001AE8D7 /* FileType+classes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileType+classes.swift"; sourceTree = "<group>"; };
+		C1F32C1B25F8058700410BB2 /* SubString+count.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SubString+count.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				C18769BD25F513E700AFACDC /* IO.swift */,
 				C1CD8FF025F54B36006E3D4D /* Fileinfo.swift */,
 				C12F6D2725F6BD8E00D5F254 /* SourceFileAnalysis.swift */,
+				C1F32C1B25F8058700410BB2 /* SubString+count.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -174,6 +177,7 @@
 				C1F1415425F7EEAA001AE8D7 /* FileType+description.swift in Sources */,
 				C1F1415725F7F032001AE8D7 /* FileType+interfaces.swift in Sources */,
 				C1F1415A25F7F39B001AE8D7 /* FileType+classes.swift in Sources */,
+				C1F32C1C25F8058700410BB2 /* SubString+count.swift in Sources */,
 				C1CD8FED25F54A5E006E3D4D /* PredicateSet.swift in Sources */,
 				C18769C125F5143E00AFACDC /* Program.swift in Sources */,
 			);

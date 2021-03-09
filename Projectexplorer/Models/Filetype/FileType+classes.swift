@@ -14,7 +14,7 @@ extension Filetype {
 		case .c:
 			return ""
 		case .cpp:
-			return "class"
+			return "class "
 		case .kotlin:
 			return "class "
 		case .swift:
