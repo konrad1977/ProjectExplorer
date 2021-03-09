@@ -9,8 +9,16 @@ import Foundation
 
 enum SourceFileAnalysis {
 
-	static func countFunctions(sourceFile: String.SubSequence) -> IO<Int> {
-		IO { sourceFile.components(separatedBy: "func ").count - 1}
+	static func countFunctions(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
+		{ str in IO { str.components(separatedBy: filetype.functions).count - 1} }
+	}
+
+	static func countInterfaces(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
+		{ str in IO { str.components(separatedBy: filetype.interfaces).count - 1} }
+	}
+
+	static func countClasses(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
+		{ str in IO { str.components(separatedBy: filetype.classes).count - 1} }
 	}
 
 	static func countExtensions(sourceFile: String.SubSequence) -> IO<Int> {
@@ -23,10 +31,6 @@ enum SourceFileAnalysis {
 
 	static func countStructs(sourceFile: String.SubSequence) -> IO<Int> {
 		IO { sourceFile.components(separatedBy: "struct ").count - 1 }
-	}
-
-	static func countClasses(sourceFile: String.SubSequence) -> IO<Int> {
-		IO { sourceFile.components(separatedBy: "class ").count - 1 }
 	}
 
 	static func countLinesIn(sourceFile: String.SubSequence) -> IO<Int> {

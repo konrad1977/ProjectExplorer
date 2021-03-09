@@ -33,6 +33,7 @@ fileprivate extension Predicate where A == String {
 		$0.hasSuffix(".m") ||
 		$0.hasSuffix(".cpp") ||
 		$0.hasSuffix(".mm") ||
+		$0.hasSuffix(".h") ||
 		$0.hasSuffix(".c") ||
 		$0.hasSuffix(".kt") ||
 		$0.hasSuffix(".ktm") ||
@@ -47,10 +48,7 @@ struct Program {
 	}
 
 	private func executablePath() -> IO<String> {
-		guard let path = Bundle.main.resourcePath
-		else { return IO { "" } }
-		print(path)
-		return IO { path }
+		IO { FileManager.default.currentDirectoryPath }
 	}
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
@@ -66,18 +64,20 @@ struct Program {
 		sourceFile(for: path)
 			.flatmap { source in
 				zip(
-					SourceFileAnalysis.countClasses(sourceFile: source),
+					SourceFileAnalysis.countClasses(filetype: filetype)(source),
 					SourceFileAnalysis.countStructs(sourceFile: source),
 					SourceFileAnalysis.countEnums(sourceFile: source),
-					SourceFileAnalysis.countFunctions(sourceFile: source),
+					SourceFileAnalysis.countInterfaces(filetype: filetype)(source),
+					SourceFileAnalysis.countFunctions(filetype: filetype)(source),
 					SourceFileAnalysis.countLinesIn(sourceFile: source),
 					SourceFileAnalysis.countCommentIn(sourceFile: source)
-				).map { classes, structs, enums, functions, lines, comments in
+				).map { classes, structs, enums, interfaces, functions, lines, comments in
 					Fileinfo(
 						filename: filename,
 						classes: classes,
 						structs: structs,
 						enums: enums,
+						interfaces: interfaces,
 						functions: functions,
 						linecount: lines,
 						comments: comments,
@@ -111,11 +111,9 @@ struct Program {
 
 	private func summary(_ fileInfos: [Fileinfo]) -> IO<Void> {
 		zip(
-			repeatString("⎻", count: 75),
 			outputLanguageSpecificSummary(fileInfos),
 			repeatString("⎼", count: 75),
-            outputTotalSummary(fileInfos),
-            repeatString("⎼", count: 75)
+            outputTotalSummary(fileInfos)
 		).map { _ in }
 	}
 
@@ -136,29 +134,32 @@ struct Program {
 		guard fileInfo.count > 0
 		else { return IO { } }
 
-		let totalFiles = fileInfo.count
-		let (classes, structs, enums, functions, lines) = fileInfo.reduce(into: (0, 0, 0, 0, 0)) { acc, fileInfo in
+		let (classes, structs, enums, interfaces, functions, lines) = fileInfo.reduce(
+			into: (0, 0, 0, 0, 0, 0)) { acc, fileInfo in
 			acc.0 += fileInfo.classes
 			acc.1 += fileInfo.structs
 			acc.2 += fileInfo.enums
-			acc.3 += fileInfo.functions
-			acc.4 += fileInfo.linecount
+			acc.3 += fileInfo.interfaces
+			acc.4 += fileInfo.functions
+			acc.5 += fileInfo.linecount
 		}
 
 		let info = IO {
-//			let separator = textWithColor(.yellow, " • ")
-			print("Language: \(textWithColor(.blue, filetype.description))")
-			let classes = "classes: \(textWithColor(.green, classes))"
-			let structs = "structs: \(textWithColor(.red, structs))"
-			let enums = "enums: \(textWithColor(.red, enums))"
-			let functions = "functions: \(textWithColor(.red, functions))"
-			let lines = "lines: \(textWithColor(.red, lines))"
+			let classes = "classes: \(textWithColor(.magenta, classes))"
+			let structs = "structs: \(textWithColor(.magenta, structs))"
+			let enums = "enums: \(textWithColor(.magenta, enums))"
+			let interfaces = "interfaces: \(textWithColor(.magenta, interfaces))"
+			let functions = "functions: \(textWithColor(.magenta, functions))"
+			let lines = "lines: \(textWithColor(.magenta, lines))"
 
+			print(textWithColor(.red, filetype.description))
+			print("Files: \(textWithColor(.red, fileInfo.count))")
+			print(lines)
 			print(classes)
 			print(structs)
 			print(enums)
 			print(functions)
-			print(lines)
+			print(interfaces)
 		}
 		return zip(info, repeatString("-", count: 75)).map { _ in }
 	}
@@ -239,6 +240,6 @@ extension Program {
 				.flatmap(summary)
 		}
 		.flatmap(roundToDecimals(2))
-		.flatmap(outputTimemeasure(time:))
+		.flatmap(outputTimemeasure)
 	}
 }

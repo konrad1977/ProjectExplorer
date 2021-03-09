@@ -32,7 +32,8 @@ func zip<A, B, C>(
 	_ second: IO<B>,
 	_ third: IO<C>
 ) -> IO<(A, B, C)> {
-	zip(first, zip(second, third)).map { ($0, $1.0, $1.1) }
+	zip(first, zip(second, third))
+		.map { ($0, $1.0, $1.1) }
 }
 
 func zip<A, B, C, D>(
@@ -41,7 +42,8 @@ func zip<A, B, C, D>(
 	_ third: IO<C>,
 	_ forth: IO<D>
 ) -> IO<(A, B, C, D)> {
-	zip(first, zip(second, third, forth)).map { ($0, $1.0, $1.1, $1.2) }
+	zip(first, zip(second, third, forth))
+		.map { ($0, $1.0, $1.1, $1.2) }
 }
 
 func zip<A, B, C, D, E>(
@@ -51,7 +53,8 @@ func zip<A, B, C, D, E>(
 	_ forth: IO<D>,
 	_ fifth: IO<E>
 ) -> IO<(A, B, C, D, E)> {
-	zip(first, zip(second, third, forth, fifth)).map { ($0, $1.0, $1.1, $1.2, $1.3) }
+	zip(first, zip(second, third, forth, fifth))
+		.map { ($0, $1.0, $1.1, $1.2, $1.3) }
 }
 
 func zip<A, B, C, D, E, F>(
@@ -62,5 +65,19 @@ func zip<A, B, C, D, E, F>(
 	_ fifth: IO<E>,
 	_ sixth: IO<F>
 ) -> IO<(A, B, C, D, E, F)> {
-	zip(first, zip(second, third, forth, fifth, sixth)).map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4) }
+	zip(first, zip(second, third, forth, fifth, sixth))
+		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4) }
+}
+
+func zip<A, B, C, D, E, F, G>(
+	_ first: IO<A>,
+	_ second: IO<B>,
+	_ third: IO<C>,
+	_ forth: IO<D>,
+	_ fifth: IO<E>,
+	_ sixth: IO<F>,
+	_ seventh: IO<G>
+) -> IO<(A, B, C, D, E, F, G)> {
+	zip(first, zip(second, third, forth, fifth, sixth, seventh))
+		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5) }
 }
