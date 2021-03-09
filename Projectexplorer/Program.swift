@@ -47,10 +47,10 @@ struct Program {
 
 	private func executablePath() -> IO<String> {
 		IO {
-			//let path =
+			let path =
 				FileManager.default.currentDirectoryPath
-//			print(path)
-//			return path
+			print(path)
+			return path
 		}
 	}
 
@@ -148,13 +148,13 @@ struct Program {
 
 		let info = IO {
 			print(textWithColor(.red, filetype.description))
-			print("Files: \(textWithColor(.yellow, fileInfo.count))")
+			print("files: \(textWithColor(.yellow, fileInfo.count))")
 			print("lines: \(textWithColor(.red, lines))")
 			print("classes: \(textWithColor(.blue, classes))")
 			print("structs: \(textWithColor(.green, structs))")
 			print("enums: \(textWithColor(.cyan, enums))")
 			print("functions: \(textWithColor(.white, functions))")
-			print("interfaces: \(textWithColor(.magenta, interfaces))")
+            print("interfaces: \(textWithColor(.yellow, interfaces))")
 		}
 		return zip(info, repeatString("—", count: 24)).map { _ in }
 	}
