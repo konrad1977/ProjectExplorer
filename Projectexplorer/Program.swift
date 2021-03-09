@@ -47,10 +47,10 @@ struct Program {
 
 	private func executablePath() -> IO<String> {
 		IO {
-			let path =
+			//let path =
 				FileManager.default.currentDirectoryPath
-			print(path)
-			return path
+//			print(path)
+//			return path
 		}
 	}
 
