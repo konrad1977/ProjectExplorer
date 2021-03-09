@@ -57,11 +57,24 @@ extension Filetype {
 
 struct Fileinfo {
 	let filename: String
+	let classes: Int
+	let structs: Int
+	let enums: Int
+	let functions: Int
 	let linecount: Int
 	let comments: Int
 	let filetype: Filetype
 }
 
 extension Fileinfo {
-	static var empty = Fileinfo(filename: "", linecount: 0, comments: 0, filetype: .none)
+	static var empty = Fileinfo(
+		filename: "",
+		classes: 0,
+		structs: 0,
+		enums: 0,
+		functions: 0,
+		linecount: 0,
+		comments: 0,
+		filetype: .none
+	)
 }
