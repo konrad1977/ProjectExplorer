@@ -166,23 +166,26 @@ struct Program {
 
 	private func outputPercentage(_ fileInfo: [Fileinfo]) -> IO<Void> {
 
+        guard fileInfo.isEmpty == false
+        else { return IO<Void> {} }
+
 		let (_, swift) = fileInfoFor(filetype: .swift, info: fileInfo).unsafeRun()
 		let (_ ,kotlin) = fileInfoFor(filetype: .kotlin, info: fileInfo).unsafeRun()
 		let (_, objc) = fileInfoFor(filetype: .objectiveC, info: fileInfo).unsafeRun()
 
 		return IO<Void> {
-			let swiftPercent = (swift.count / fileInfo.count) * 100
-			let kotlinPercent = (kotlin.count / fileInfo.count) * 100
-			let objcPercent = (objc.count / fileInfo.count) * 100
+            let swiftPercent = roundToDecimals(2)(Double(swift.count) / Double(fileInfo.count) * 100).unsafeRun()
+            let kotlinPercent = roundToDecimals(2)(Double(kotlin.count) / Double(fileInfo.count) * 100).unsafeRun()
+            let objcPercent =  roundToDecimals(2)(Double(objc.count) / Double(fileInfo.count) * 100).unsafeRun()
 
 			if swiftPercent > 0 {
-				print("Swift : \(textWithColor(.yellow, swiftPercent))%")
+                print("Swift : \(textWithColor(.yellow, swiftPercent.rounded())) %")
 			}
 			if kotlinPercent > 0 {
-				print("Kotlin : \(textWithColor(.yellow, kotlinPercent))%")
+				print("Kotlin : \(textWithColor(.yellow, kotlinPercent)) %")
 			}
 			if objcPercent > 0 {
-				print("Objective-C : \(textWithColor(.yellow, objcPercent))%")
+				print("Objective-C : \(textWithColor(.yellow, objcPercent)) %")
 			}
 		}
 	}
