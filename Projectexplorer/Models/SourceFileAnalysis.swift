@@ -25,13 +25,13 @@ enum SourceFileAnalysis {
 		IO { sourceFile.countInstances(of:"extension ") }
 	}
 
-	static func countEnums(sourceFile: String.SubSequence) -> IO<Int> {
-		IO { sourceFile.countInstances(of: "enum ") }
-	}
+    static func countEnums(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
+        { str in IO { str.countInstances(of: filetype.enums) } }
+    }
 
-	static func countStructs(sourceFile: String.SubSequence) -> IO<Int> {
-		IO { sourceFile.countInstances(of: "struct ") }
-	}
+    static func countStructs(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
+        { str in IO { str.countInstances(of: filetype.structs) } }
+    }
 
 	static func countLinesIn(sourceFile: String.SubSequence) -> IO<Int> {
 		IO { sourceFile.components(separatedBy: .newlines).count - 1 }

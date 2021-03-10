@@ -47,10 +47,10 @@ struct Program {
 
 	private func executablePath() -> IO<String> {
 		IO {
-			//let path =
+			let path =
 				FileManager.default.currentDirectoryPath
-//			print(path)
-//			return path
+			print(path)
+			return path
 		}
 	}
 
@@ -68,8 +68,8 @@ struct Program {
 			.flatmap { source in
 				zip(
 					SourceFileAnalysis.countClasses(filetype: filetype)(source),
-					SourceFileAnalysis.countStructs(sourceFile: source),
-					SourceFileAnalysis.countEnums(sourceFile: source),
+					SourceFileAnalysis.countStructs(filetype: filetype)(source),
+					SourceFileAnalysis.countEnums(filetype: filetype)(source),
 					SourceFileAnalysis.countInterfaces(filetype: filetype)(source),
 					SourceFileAnalysis.countFunctions(filetype: filetype)(source),
 					SourceFileAnalysis.countLinesIn(sourceFile: source),
