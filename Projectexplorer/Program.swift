@@ -31,7 +31,6 @@ fileprivate extension Predicate where A == String {
 	static var supportedFiletypes = Predicate {
 		$0.hasSuffix(".swift") ||
 		$0.hasSuffix(".m") ||
-		$0.hasSuffix(".mm") ||
 		$0.hasSuffix(".h") ||
 		$0.hasSuffix(".kt") ||
 		$0.hasSuffix(".ktm") ||
@@ -50,8 +49,10 @@ struct Program {
 	}
 
 	private func executablePath() -> IO<String> {
-		print(FileManager.default.currentDirectoryPath)
-		return IO<String>.pure(FileManager.default.currentDirectoryPath)
+        #if DEBUG
+            print(FileManager.default.currentDirectoryPath)
+        #endif
+        return IO<String>.pure(FileManager.default.currentDirectoryPath)
 	}
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
@@ -72,9 +73,8 @@ struct Program {
 					SourceFileAnalysis.countEnums(filetype: filetype)(source),
 					SourceFileAnalysis.countInterfaces(filetype: filetype)(source),
 					SourceFileAnalysis.countFunctions(filetype: filetype)(source),
-					SourceFileAnalysis.countLinesIn(sourceFile: source),
-					SourceFileAnalysis.countCommentIn(sourceFile: source)
-				).map { classes, structs, enums, interfaces, functions, lines, comments in
+                    SourceFileAnalysis.countLinesIn(sourceFile: source)
+				).map { classes, structs, enums, interfaces, functions, lines in
 					Fileinfo(
 						filename: filename,
 						classes: classes,
@@ -83,7 +83,6 @@ struct Program {
 						interfaces: interfaces,
 						functions: functions,
 						linecount: lines,
-						comments: comments,
 						filetype: filetype
 					)
 				}
@@ -149,16 +148,18 @@ struct Program {
 			acc.5 += fileInfo.linecount
 		}
 
-		return IO {
-			print(textWithColor(.red, filetype.description))
-			print("files : \(textWithColor(.yellow, fileInfo.count))")
-			print("lines : \(textWithColor(.red, lines))")
-			print("classes : \(textWithColor(.blue, classes))")
-			print("\(filetype.structs): \(textWithColor(.green, structs))")
-			print("\(filetype.enums) : \(textWithColor(.cyan, enums))")
-			print("functions : \(textWithColor(.white, functions))")
-            print("\(filetype.interfaces) : \(textWithColor(.yellow, interfaces))")
-		}
+        return lineSeparator().flatmap {
+            IO {
+                print(textWithColor(.red, filetype.description))
+                print("files : \(textWithColor(.yellow, fileInfo.count))")
+                print("lines : \(textWithColor(.red, lines))")
+                print("classes : \(textWithColor(.blue, classes))")
+                print("\(filetype.structs): \(textWithColor(.green, structs))")
+                print("\(filetype.enums) : \(textWithColor(.cyan, enums))")
+                print("functions : \(textWithColor(.white, functions))")
+                print("\(filetype.interfaces) : \(textWithColor(.yellow, interfaces))")
+            }
+        }
 	}
 
 	private func fileInfoFor(filetype: Filetype, info: [Fileinfo]) -> IO<(Filetype, [Fileinfo])> {
@@ -182,13 +183,12 @@ struct Program {
 		let (_, objc) = fileInfoFor(filetype: .objectiveC, info: fileInfo).unsafeRun()
 
         let totalFiles = swift.count + kotlin.count + objc.count
-        
+
         guard totalFiles > 0
         else { return IO<Void> {} }
 
         return lineSeparator().flatmap {
-            IO<Void> {
-
+            IO {
                 let swiftPercent = roundToDecimals(1)(Double(swift.count) / Double(totalFiles) * 100).unsafeRun()
                 let kotlinPercent = roundToDecimals(1)(Double(kotlin.count) / Double(totalFiles) * 100).unsafeRun()
                 let objcPercent =  roundToDecimals(1)(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
@@ -207,11 +207,8 @@ struct Program {
 	}
 
     private func outputLanguageSummary(for filetype: Filetype, _ fileInfo: [Fileinfo]) -> IO<Void> {
-        zip(
-            fileInfoFor(filetype: filetype, info: fileInfo)
-            .flatmap(summaryOutputForFiletype),
-            lineSeparator()
-        ).map { _ in }
+        fileInfoFor(filetype: filetype, info: fileInfo)
+        .flatmap(summaryOutputForFiletype)
     }
 
 	private func calculateTime(block: @escaping () -> IO<Void>) -> IO<Double> {

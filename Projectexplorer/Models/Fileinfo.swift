@@ -15,7 +15,6 @@ struct Fileinfo {
 	let interfaces: Int
 	let functions: Int
 	let linecount: Int
-	let comments: Int
 	let filetype: Filetype
 }
 
@@ -28,7 +27,6 @@ extension Fileinfo {
 		interfaces: 0,
 		functions: 0,
 		linecount: 0,
-		comments: 0,
 		filetype: .none
 	)
 }
