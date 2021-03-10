@@ -59,8 +59,8 @@ struct Program {
 		guard let paths = try? FileManager.default
 				.subpathsOfDirectory(atPath: path)
 				.filter(Predicate.supportedFiletypes.contains)
-
 		else { return IO { [] } }
+
 		return IO { paths }
 	}
 
@@ -91,17 +91,13 @@ struct Program {
 
 	private func createFileInfo(_ path: String) -> IO<Fileinfo> {
 		let fileUrl = URL(fileURLWithPath: path)
-		let filetypes = Filetype(extension: fileUrl.pathExtension)
+		let filetype = Filetype(extension: fileUrl.pathExtension)
 		let filename = fileUrl.deletingPathExtension().lastPathComponent
-		return analyzeSourceFile(path: path, filename: filename, filetype: filetypes)
+		return analyzeSourceFile(path: path, filename: filename, filetype: filetype)
 	}
 
 	private func analyzeSubpaths(_ paths: [String]) -> IO<[Fileinfo]> {
-		IO { paths
-			.map(createFileInfo)
-			.map { $0.unsafeRun() }
-			.sorted(by: { $0.filename < $1.filename })
-		}
+		IO { paths.map(createFileInfo).map { $0.unsafeRun() } }
 	}
 
 	private func sourceFile(for path: String) -> IO<String.SubSequence> {
@@ -113,9 +109,9 @@ struct Program {
 
 	private func summary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 		zip(
-            outputLanguageSummary(for: .swift, fileInfo),
-            outputLanguageSummary(for: .kotlin, fileInfo),
-            outputLanguageSummary(for: .objectiveC, fileInfo),
+			outputLanguageSummary(for: .swift)(fileInfo),
+			outputLanguageSummary(for: .kotlin)(fileInfo),
+			outputLanguageSummary(for: .objectiveC)(fileInfo),
             outputTotalSummary(fileInfo),
             lineSeparator()
 		).map { _ in }
@@ -162,13 +158,13 @@ struct Program {
         }
 	}
 
-	private func fileInfoFor(filetype: Filetype, info: [Fileinfo]) -> IO<(Filetype, [Fileinfo])> {
-		IO { (filetype, info.filter { $0.filetype == filetype }) }
+	private func filterFileInfo(info: [Fileinfo]) -> (Filetype) -> IO<(Filetype, [Fileinfo])> {
+		return { filetype in IO { (filetype, info.filter { $0.filetype == filetype }) } }
 	}
 
     private func outputTotalSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
         zip(
-            summaryOutputForFiletype(.all, fileInfo: fileInfo),
+			summaryOutputForFiletype(.all, fileInfo: fileInfo),
             outputPercentage(fileInfo)
         ).map { _ in }
     }
@@ -178,9 +174,10 @@ struct Program {
         guard fileInfo.isEmpty == false
         else { return IO<Void> {} }
 
-		let (_, swift) = fileInfoFor(filetype: .swift, info: fileInfo).unsafeRun()
-		let (_ ,kotlin) = fileInfoFor(filetype: .kotlin, info: fileInfo).unsafeRun()
-		let (_, objc) = fileInfoFor(filetype: .objectiveC, info: fileInfo).unsafeRun()
+		let filterFilesFor = filterFileInfo(info: fileInfo)
+		let (_, swift) = filterFilesFor(.swift).unsafeRun()
+		let (_ ,kotlin) = filterFilesFor(.kotlin).unsafeRun()
+		let (_, objc) = filterFilesFor(.objectiveC).unsafeRun()
 
         let totalFiles = swift.count + kotlin.count + objc.count
 
@@ -194,7 +191,7 @@ struct Program {
                 let objcPercent =  roundToDecimals(1)(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
 
                 if swiftPercent > 0 {
-                    print("Swift : \(textWithColor(.yellow, swiftPercent.rounded())) %")
+                    print("Swift : \(textWithColor(.yellow, swiftPercent)) %")
                 }
                 if kotlinPercent > 0 {
                     print("Kotlin : \(textWithColor(.yellow, kotlinPercent)) %")
@@ -206,9 +203,11 @@ struct Program {
         }
 	}
 
-    private func outputLanguageSummary(for filetype: Filetype, _ fileInfo: [Fileinfo]) -> IO<Void> {
-        fileInfoFor(filetype: filetype, info: fileInfo)
-        .flatmap(summaryOutputForFiletype)
+    private func outputLanguageSummary(for filetype: Filetype ) -> ([Fileinfo]) -> IO<Void> {
+		return { fileInfo in
+			filterFileInfo(info: fileInfo)(filetype)
+				.flatmap(summaryOutputForFiletype)
+		}
     }
 
 	private func calculateTime(block: @escaping () -> IO<Void>) -> IO<Double> {
