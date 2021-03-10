@@ -15,7 +15,7 @@ extension Filetype {
         case .objectiveC:
             return "enum "
         default:
-            return ""
+            return "enum/enum classes"
         }
     }
 }

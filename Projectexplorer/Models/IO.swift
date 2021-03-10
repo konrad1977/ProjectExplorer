@@ -19,6 +19,11 @@ struct IO<A> {
 		IO<B> { f(self.unsafeRun()).unsafeRun() }
 	}
 }
+extension IO {
+	static func pure<A>(_ value: A) -> IO<A> {
+		IO<A> { value }
+	}
+}
 
 func zip<A, B>(
 	_ first: IO<A>,

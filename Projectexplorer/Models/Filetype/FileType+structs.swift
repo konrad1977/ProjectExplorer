@@ -11,11 +11,11 @@ extension Filetype {
         case .kotlin:
             return "data class "
         case .swift:
-            return "structs "
+            return "struct "
         case .objectiveC:
             return "struct "
         default:
-            return ""
+            return "structs/data classes"
         }
     }
 }

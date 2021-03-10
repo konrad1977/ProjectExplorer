@@ -18,7 +18,7 @@ extension Filetype {
 		case .objectiveC:
 			return "@interface "
 		default:
-			return ""
+			return "interfaces/protocols"
 		}
 	}
 }

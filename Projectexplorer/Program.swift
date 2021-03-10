@@ -46,12 +46,8 @@ struct Program {
 	}
 
 	private func executablePath() -> IO<String> {
-		IO {
-			let path =
-				FileManager.default.currentDirectoryPath
-			print(path)
-			return path
-		}
+		print(FileManager.default.currentDirectoryPath)
+		return IO<String>.pure(FileManager.default.currentDirectoryPath)
 	}
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
@@ -115,7 +111,8 @@ struct Program {
 	private func summary(_ fileInfos: [Fileinfo]) -> IO<Void> {
 		zip(
 			outputLanguageSpecificSummary(fileInfos),
-            outputTotalSummary(fileInfos)
+            outputTotalSummary(fileInfos),
+			outputPercentage(fileInfos)
 		).map { _ in }
 	}
 
@@ -148,13 +145,13 @@ struct Program {
 
 		let info = IO {
 			print(textWithColor(.red, filetype.description))
-			print("files: \(textWithColor(.yellow, fileInfo.count))")
-			print("lines: \(textWithColor(.red, lines))")
-			print("classes: \(textWithColor(.blue, classes))")
-			print("structs: \(textWithColor(.green, structs))")
-			print("enums: \(textWithColor(.cyan, enums))")
-			print("functions: \(textWithColor(.white, functions))")
-            print("interfaces: \(textWithColor(.yellow, interfaces))")
+			print("files : \(textWithColor(.yellow, fileInfo.count))")
+			print("lines : \(textWithColor(.red, lines))")
+			print("classes : \(textWithColor(.blue, classes))")
+			print("\(filetype.structs): \(textWithColor(.green, structs))")
+			print("\(filetype.enums) : \(textWithColor(.cyan, enums))")
+			print("functions : \(textWithColor(.white, functions))")
+            print("\(filetype.interfaces) : \(textWithColor(.yellow, interfaces))")
 		}
 		return zip(info, repeatString("—", count: 24)).map { _ in }
 	}
@@ -166,6 +163,29 @@ struct Program {
     private func outputTotalSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
         summaryOutputForFiletype(.all, fileInfo: fileInfo)
     }
+
+	private func outputPercentage(_ fileInfo: [Fileinfo]) -> IO<Void> {
+
+		let (_, swift) = fileInfoFor(filetype: .swift, info: fileInfo).unsafeRun()
+		let (_ ,kotlin) = fileInfoFor(filetype: .kotlin, info: fileInfo).unsafeRun()
+		let (_, objc) = fileInfoFor(filetype: .objectiveC, info: fileInfo).unsafeRun()
+
+		return IO<Void> {
+			let swiftPercent = (swift.count / fileInfo.count) * 100
+			let kotlinPercent = (kotlin.count / fileInfo.count) * 100
+			let objcPercent = (objc.count / fileInfo.count) * 100
+
+			if swiftPercent > 0 {
+				print("Swift : \(textWithColor(.yellow, swiftPercent))%")
+			}
+			if kotlinPercent > 0 {
+				print("Kotlin : \(textWithColor(.yellow, kotlinPercent))%")
+			}
+			if objcPercent > 0 {
+				print("Objective-C : \(textWithColor(.yellow, objcPercent))%")
+			}
+		}
+	}
 
 	private func outputLanguageSpecificSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 

@@ -18,7 +18,18 @@ enum SourceFileAnalysis {
 	}
 
 	static func countClasses(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
-		{ str in IO { str.countInstances(of: filetype.classes) } }
+		{ str in
+			IO {
+				switch filetype {
+				case .kotlin:
+					let enumCount = str.countInstances(of: filetype.enums)
+					let structCount = str.countInstances(of: filetype.structs)
+					return str.countInstances(of: filetype.classes) - (enumCount + structCount)
+				default:
+					return str.countInstances(of: filetype.classes)
+				}
+			}
+		}
 	}
 
 	static func countExtensions(sourceFile: String.SubSequence) -> IO<Int> {
