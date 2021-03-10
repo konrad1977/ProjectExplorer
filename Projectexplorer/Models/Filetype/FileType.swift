@@ -18,7 +18,7 @@ enum Filetype {
 		switch `extension` {
 		case "kt", "kts", "ktm":
 			self = .kotlin
-		case "m":
+        case "m", ".h":
 			self = .objectiveC
 		case "swift":
 			self = .swift

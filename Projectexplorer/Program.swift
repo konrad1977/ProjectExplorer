@@ -41,6 +41,10 @@ fileprivate extension Predicate where A == String {
 
 struct Program {
 
+    private func lineSeparator(color: TerminalColor = .blue) -> IO<Void> {
+        repeatString("—", count: 24, color: color)
+    }
+
 	private func startProgramWithMessage(_ message: String) -> IO<Void> {
 		IO { print(textWithColor(.yellow, message)) }
 	}
@@ -108,16 +112,18 @@ struct Program {
 		return IO { file }
 	}
 
-	private func summary(_ fileInfos: [Fileinfo]) -> IO<Void> {
+	private func summary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 		zip(
-			outputLanguageSpecificSummary(fileInfos),
-            outputTotalSummary(fileInfos),
-			outputPercentage(fileInfos)
+            outputLanguageSummary(for: .swift, fileInfo),
+            outputLanguageSummary(for: .kotlin, fileInfo),
+            outputLanguageSummary(for: .objectiveC, fileInfo),
+            outputTotalSummary(fileInfo),
+            lineSeparator()
 		).map { _ in }
 	}
 
-	private func repeatString(_ char: Character, count: Int) -> IO<Void> {
-		IO { print(textWithColor(.blue, String(repeating: char, count: count))) }
+    private func repeatString(_ char: Character, count: Int, color: TerminalColor = .blue) -> IO<Void> {
+		IO { print(textWithColor(color, String(repeating: char, count: count))) }
 	}
 
 	private func outputFilelist(_ infos: [Fileinfo]) -> IO<Void> {
@@ -143,7 +149,7 @@ struct Program {
 			acc.5 += fileInfo.linecount
 		}
 
-		let info = IO {
+		return IO {
 			print(textWithColor(.red, filetype.description))
 			print("files : \(textWithColor(.yellow, fileInfo.count))")
 			print("lines : \(textWithColor(.red, lines))")
@@ -153,7 +159,6 @@ struct Program {
 			print("functions : \(textWithColor(.white, functions))")
             print("\(filetype.interfaces) : \(textWithColor(.yellow, interfaces))")
 		}
-		return zip(info, repeatString("—", count: 24)).map { _ in }
 	}
 
 	private func fileInfoFor(filetype: Filetype, info: [Fileinfo]) -> IO<(Filetype, [Fileinfo])> {
@@ -161,7 +166,10 @@ struct Program {
 	}
 
     private func outputTotalSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
-        summaryOutputForFiletype(.all, fileInfo: fileInfo)
+        zip(
+            summaryOutputForFiletype(.all, fileInfo: fileInfo),
+            outputPercentage(fileInfo)
+        ).map { _ in }
     }
 
 	private func outputPercentage(_ fileInfo: [Fileinfo]) -> IO<Void> {
@@ -173,44 +181,38 @@ struct Program {
 		let (_ ,kotlin) = fileInfoFor(filetype: .kotlin, info: fileInfo).unsafeRun()
 		let (_, objc) = fileInfoFor(filetype: .objectiveC, info: fileInfo).unsafeRun()
 
-		return IO<Void> {
-            let swiftPercent = roundToDecimals(2)(Double(swift.count) / Double(fileInfo.count) * 100).unsafeRun()
-            let kotlinPercent = roundToDecimals(2)(Double(kotlin.count) / Double(fileInfo.count) * 100).unsafeRun()
-            let objcPercent =  roundToDecimals(2)(Double(objc.count) / Double(fileInfo.count) * 100).unsafeRun()
+        let totalFiles = swift.count + kotlin.count + objc.count
+        
+        guard totalFiles > 0
+        else { return IO<Void> {} }
 
-			if swiftPercent > 0 {
-                print("Swift : \(textWithColor(.yellow, swiftPercent.rounded())) %")
-			}
-			if kotlinPercent > 0 {
-				print("Kotlin : \(textWithColor(.yellow, kotlinPercent)) %")
-			}
-			if objcPercent > 0 {
-				print("Objective-C : \(textWithColor(.yellow, objcPercent)) %")
-			}
-		}
+        return lineSeparator().flatmap {
+            IO<Void> {
+
+                let swiftPercent = roundToDecimals(1)(Double(swift.count) / Double(totalFiles) * 100).unsafeRun()
+                let kotlinPercent = roundToDecimals(1)(Double(kotlin.count) / Double(totalFiles) * 100).unsafeRun()
+                let objcPercent =  roundToDecimals(1)(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
+
+                if swiftPercent > 0 {
+                    print("Swift : \(textWithColor(.yellow, swiftPercent.rounded())) %")
+                }
+                if kotlinPercent > 0 {
+                    print("Kotlin : \(textWithColor(.yellow, kotlinPercent)) %")
+                }
+                if objcPercent > 0 {
+                    print("Objective-C : \(textWithColor(.yellow, objcPercent)) %")
+                }
+            }
+        }
 	}
 
-	private func outputLanguageSpecificSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
-
-		let swiftFiles =
-			fileInfoFor(filetype: .swift, info: fileInfo)
-			.flatmap(summaryOutputForFiletype)
-
-		let objcFiles =
-			fileInfoFor(filetype: .objectiveC, info: fileInfo)
-			.flatmap(summaryOutputForFiletype)
-
-		let kotlinFiles =
-			fileInfoFor(filetype: .kotlin, info: fileInfo)
-			.flatmap(summaryOutputForFiletype)
-
-		return zip(
-			repeatString("—", count: 35),
-			swiftFiles,
-			objcFiles,
-			kotlinFiles
-		).map { _ in }
-	}
+    private func outputLanguageSummary(for filetype: Filetype, _ fileInfo: [Fileinfo]) -> IO<Void> {
+        zip(
+            fileInfoFor(filetype: filetype, info: fileInfo)
+            .flatmap(summaryOutputForFiletype),
+            lineSeparator()
+        ).map { _ in }
+    }
 
 	private func calculateTime(block: @escaping () -> IO<Void>) -> IO<Double> {
 		IO {
@@ -223,9 +225,7 @@ struct Program {
 	}
 
 	private func outputTimemeasure(time: Double) -> IO<Void> {
-		IO {
-			print("Total time: \(textWithColor(.red, time)) seconds")
-		}
+		IO { print("Total time: \(textWithColor(.red, time)) seconds") }
 	}
 
 	private func roundToDecimals(_ places: Double) -> (Double) -> IO<Double> {
