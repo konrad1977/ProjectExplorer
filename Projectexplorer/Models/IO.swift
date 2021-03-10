@@ -15,7 +15,7 @@ struct IO<A> {
 		IO<B> { f(self.unsafeRun()) }
 	}
 
-	func flatmap<B>(_ f: @escaping (A) -> IO<B>) -> IO<B> {
+	func flatMap<B>(_ f: @escaping (A) -> IO<B>) -> IO<B> {
 		IO<B> { f(self.unsafeRun()).unsafeRun() }
 	}
 }
@@ -85,4 +85,18 @@ func zip<A, B, C, D, E, F, G>(
 ) -> IO<(A, B, C, D, E, F, G)> {
 	zip(first, zip(second, third, forth, fifth, sixth, seventh))
 		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5) }
+}
+
+func zip<A, B, C, D, E, F, G, H>(
+	_ first: IO<A>,
+	_ second: IO<B>,
+	_ third: IO<C>,
+	_ forth: IO<D>,
+	_ fifth: IO<E>,
+	_ sixth: IO<F>,
+	_ seventh: IO<G>,
+	_ eigth: IO<H>
+) -> IO<(A, B, C, D, E, F, G, H)> {
+	zip(first, zip(second, third, forth, fifth, sixth, seventh, eigth))
+		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5, $1.6) }
 }

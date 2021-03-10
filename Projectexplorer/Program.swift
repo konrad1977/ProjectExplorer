@@ -7,26 +7,6 @@
 
 import Foundation
 
-fileprivate enum TerminalColor: String {
-	case reset = "\u{001B}[0;0m"
-	case black = "\u{001B}[0;30m"
-	case red = "\u{001B}[0;31m"
-	case green = "\u{001B}[0;32m"
-	case yellow = "\u{001B}[0;33m"
-	case blue = "\u{001B}[0;34m"
-	case magenta = "\u{001B}[0;35m"
-	case cyan = "\u{001B}[0;36m"
-	case white = "\u{001B}[0;37m"
-}
-
-private func textWithColor(_ color: TerminalColor, _ text: String) -> String {
-	color.rawValue + text + TerminalColor.reset.rawValue
-}
-
-private func textWithColor(_ color: TerminalColor, _ any: Any) -> String {
-	color.rawValue + "\(any)" + TerminalColor.reset.rawValue
-}
-
 fileprivate extension Predicate where A == String {
 	static var supportedFiletypes = Predicate {
 		$0.hasSuffix(".swift") ||
@@ -40,19 +20,19 @@ fileprivate extension Predicate where A == String {
 
 struct Program {
 
-    private func lineSeparator(color: TerminalColor = .blue) -> IO<Void> {
-        repeatString("—", count: 24, color: color)
+    private func lineSeparator(color: TerminalForegroundColor = .blue) -> IO<Void> {
+        printRepeatingCharacter("—", count: 28, color: color)
     }
 
 	private func startProgramWithMessage(_ message: String) -> IO<Void> {
-		IO { print(textWithColor(.yellow, message)) }
+		IO { message.textColor(.yellow) }
 	}
 
 	private func executablePath() -> IO<String> {
         #if DEBUG
             print(FileManager.default.currentDirectoryPath)
         #endif
-        return IO<String>.pure(FileManager.default.currentDirectoryPath)
+		return IO { FileManager.default.currentDirectoryPath }
 	}
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
@@ -64,28 +44,27 @@ struct Program {
 		return IO { paths }
 	}
 
+	private func sourceFile(for path: String) -> IO<String.SubSequence> {
+		guard let file = try? String(contentsOfFile: path, encoding: .ascii)[...]
+		else { return IO { "" } }
+
+		return IO { file }
+	}
+
 	private func analyzeSourceFile(path: String, filename: String, filetype: Filetype) -> IO<Fileinfo> {
 		sourceFile(for: path)
-			.flatmap { source in
+			.flatMap { source in
 				zip(
+					IO<String>.pure(filename),
 					SourceFileAnalysis.countClasses(filetype: filetype)(source),
 					SourceFileAnalysis.countStructs(filetype: filetype)(source),
 					SourceFileAnalysis.countEnums(filetype: filetype)(source),
 					SourceFileAnalysis.countInterfaces(filetype: filetype)(source),
 					SourceFileAnalysis.countFunctions(filetype: filetype)(source),
-                    SourceFileAnalysis.countLinesIn(sourceFile: source)
-				).map { classes, structs, enums, interfaces, functions, lines in
-					Fileinfo(
-						filename: filename,
-						classes: classes,
-						structs: structs,
-						enums: enums,
-						interfaces: interfaces,
-						functions: functions,
-						linecount: lines,
-						filetype: filetype
-					)
-				}
+                    SourceFileAnalysis.countLinesIn(sourceFile: source),
+					IO<Filetype>.pure(filetype)
+				)
+				.map(Fileinfo.init)
 			}
 	}
 
@@ -100,13 +79,6 @@ struct Program {
 		IO { paths.map(createFileInfo).map { $0.unsafeRun() } }
 	}
 
-	private func sourceFile(for path: String) -> IO<String.SubSequence> {
-		guard let file = try? String(contentsOfFile: path, encoding: .ascii)[...]
-		else { return IO { "" } }
-
-		return IO { file }
-	}
-
 	private func summary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 		zip(
 			outputLanguageSummary(for: .swift)(fileInfo),
@@ -117,19 +89,11 @@ struct Program {
 		).map { _ in }
 	}
 
-    private func repeatString(_ char: Character, count: Int, color: TerminalColor = .blue) -> IO<Void> {
-		IO { print(textWithColor(color, String(repeating: char, count: count))) }
+    private func printRepeatingCharacter(_ char: Character, count: Int, color: TerminalForegroundColor = .blue) -> IO<Void> {
+		IO { print(String(repeating: char, count: count).textColor(color)) }
 	}
 
-	private func outputFilelist(_ infos: [Fileinfo]) -> IO<Void> {
-		IO {
-			infos.forEach {
-				print("\($0.filename): + \(textWithColor(.red, $0.linecount))")
-			}
-		}
-	}
-
-	private func summaryOutputForFiletype(_ filetype: Filetype, fileInfo: [Fileinfo]) -> IO<Void> {
+	private func printSummaryFor(_ filetype: Filetype, fileInfo: [Fileinfo]) -> IO<Void> {
 
 		guard fileInfo.count > 0
 		else { return IO { } }
@@ -144,37 +108,40 @@ struct Program {
 			acc.5 += fileInfo.linecount
 		}
 
-        return lineSeparator().flatmap {
+        return lineSeparator().flatMap {
             IO {
-                print(textWithColor(.red, filetype.description))
-                print("files : \(textWithColor(.yellow, fileInfo.count))")
-                print("lines : \(textWithColor(.red, lines))")
-                print("classes : \(textWithColor(.blue, classes))")
-                print("\(filetype.structs): \(textWithColor(.green, structs))")
-                print("\(filetype.enums) : \(textWithColor(.cyan, enums))")
-                print("functions : \(textWithColor(.white, functions))")
-                print("\(filetype.interfaces) : \(textWithColor(.yellow, interfaces))")
+
+				let repeatingLength = 28 - filetype.description.count
+				let title = filetype.description + String(repeating: " ", count: repeatingLength)
+				print(title.backgroundColor(.white) )
+				print("files :" + "\(fileInfo.count)".textColor(.blue))
+				print("lines :" + "\(lines)".textColor(.red))
+				print("classes :" + "\(classes)".textColor(.green))
+				print("\(filetype.structs):" + " \( structs)".textColor(.green))
+				print("\(filetype.enums) :" + "\(enums)".textColor(.cyan))
+				print("functions :" + "\(functions)".textColor(.white))
+				print("\(filetype.interfaces) : " + "\(interfaces)".textColor(.yellow))
             }
         }
 	}
 
-	private func filterFileInfo(info: [Fileinfo]) -> (Filetype) -> IO<(Filetype, [Fileinfo])> {
+	private func createFilteredFileInfo(_ info: [Fileinfo]) -> (Filetype) -> IO<(Filetype, [Fileinfo])> {
 		return { filetype in IO { (filetype, info.filter { $0.filetype == filetype }) } }
 	}
 
     private func outputTotalSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
         zip(
-			summaryOutputForFiletype(.all, fileInfo: fileInfo),
-            outputPercentage(fileInfo)
+			printSummaryFor(.all, fileInfo: fileInfo),
+            printPercentSummary(fileInfo)
         ).map { _ in }
     }
 
-	private func outputPercentage(_ fileInfo: [Fileinfo]) -> IO<Void> {
+	private func printPercentSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 
         guard fileInfo.isEmpty == false
         else { return IO<Void> {} }
 
-		let filterFilesFor = filterFileInfo(info: fileInfo)
+		let filterFilesFor = createFilteredFileInfo(fileInfo)
 		let (_, swift) = filterFilesFor(.swift).unsafeRun()
 		let (_ ,kotlin) = filterFilesFor(.kotlin).unsafeRun()
 		let (_, objc) = filterFilesFor(.objectiveC).unsafeRun()
@@ -184,20 +151,21 @@ struct Program {
         guard totalFiles > 0
         else { return IO<Void> {} }
 
-        return lineSeparator().flatmap {
+        return lineSeparator().flatMap {
             IO {
-                let swiftPercent = roundToDecimals(1)(Double(swift.count) / Double(totalFiles) * 100).unsafeRun()
-                let kotlinPercent = roundToDecimals(1)(Double(kotlin.count) / Double(totalFiles) * 100).unsafeRun()
-                let objcPercent =  roundToDecimals(1)(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
+				let rounding = roundToDecimals(1)
+                let swiftPercent = rounding(Double(swift.count) / Double(totalFiles) * 100).unsafeRun()
+                let kotlinPercent = rounding(Double(kotlin.count) / Double(totalFiles) * 100).unsafeRun()
+                let objcPercent =  rounding(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
 
                 if swiftPercent > 0 {
-                    print("Swift : \(textWithColor(.yellow, swiftPercent)) %")
+					print("Swift :" + "\(swiftPercent)".textColor(.red) + "%")
                 }
                 if kotlinPercent > 0 {
-                    print("Kotlin : \(textWithColor(.yellow, kotlinPercent)) %")
+					print("Kotlin :" + "\(kotlinPercent)".textColor(.red) + "%")
                 }
                 if objcPercent > 0 {
-                    print("Objective-C : \(textWithColor(.yellow, objcPercent)) %")
+					print("Objective-C :" + "\(objcPercent)".textColor(.red) + "%")
                 }
             }
         }
@@ -205,8 +173,8 @@ struct Program {
 
     private func outputLanguageSummary(for filetype: Filetype ) -> ([Fileinfo]) -> IO<Void> {
 		return { fileInfo in
-			filterFileInfo(info: fileInfo)(filetype)
-				.flatmap(summaryOutputForFiletype)
+			createFilteredFileInfo(fileInfo)(filetype)
+				.flatMap(printSummaryFor)
 		}
     }
 
@@ -221,7 +189,7 @@ struct Program {
 	}
 
 	private func outputTimemeasure(time: Double) -> IO<Void> {
-		IO { print("Total time: \(textWithColor(.red, time)) seconds") }
+		IO { print("Total time: " + "\(time)".textColor(.red) + " seconds") }
 	}
 
 	private func roundToDecimals(_ places: Double) -> (Double) -> IO<Double> {
@@ -239,12 +207,12 @@ extension Program {
 	func start() -> IO<Void> {
 		calculateTime {
 			startProgramWithMessage("Analyzing current path. Stand by...")
-				.flatmap(executablePath)
-				.flatmap(subdirectoriesFromPath)
-				.flatmap(analyzeSubpaths)
-				.flatmap(summary)
+				.flatMap(executablePath)
+				.flatMap(subdirectoriesFromPath)
+				.flatMap(analyzeSubpaths)
+				.flatMap(summary)
 		}
-		.flatmap(roundToDecimals(2))
-		.flatmap(outputTimemeasure)
+		.flatMap(roundToDecimals(2))
+		.flatMap(outputTimemeasure)
 	}
 }
