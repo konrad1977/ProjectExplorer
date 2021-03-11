@@ -63,6 +63,14 @@ extension String {
 
 enum Console {
 
+	static let formatter: NumberFormatter = {
+		let formatter = NumberFormatter()
+		formatter.locale = Locale.current
+		formatter.usesGroupingSeparator = true
+		formatter.groupingSize = 3
+		return formatter
+	}()
+
 	static func output(_ text: String, color: TerminalColor, lineWidth: Int) {
 		guard text.count > 0
 		else { return }
@@ -72,14 +80,15 @@ enum Console {
 		print("\(text + spacer)".background(color: .barColor, textColor: color))
 	}
 
-	static func output(_ title: String, data: Any, color: TerminalColor, width: Int) {
-		guard title.count > 0 && "\(data)".count > 0
+	static func output(_ title: String, data: Int, color: TerminalColor, width: Int) {
+
+		guard title.count > 0, data > 0, let dataStr = formatter.string(from: NSNumber(integerLiteral: data))
 		else { return }
 
-		let extraSpace = width - (title.count + "\(data)".count)
+		let extraSpace = width - (title.count + dataStr.count)
 
 		let space = String(repeating: " ", count: extraSpace)
-		print(title + space + "\(data)".textColor(color))
+		print(title + space + dataStr.textColor(color))
 	}
 }
 
