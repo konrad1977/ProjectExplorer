@@ -20,12 +20,12 @@ fileprivate extension Predicate where A == String {
 
 struct Program {
 
-    private func lineSeparator(color: TerminalForegroundColor = .blue) -> IO<Void> {
-        printRepeatingCharacter("—", count: 28, color: color)
+    private func lineSeparator(color: TerminalColor = .accentColor) -> IO<Void> {
+        printRepeatingCharacter("—", count: 30, color: color)
     }
 
 	private func startProgramWithMessage(_ message: String) -> IO<Void> {
-		IO { message.textColor(.yellow) }
+		IO { message.textColor(.accentColor) }
 	}
 
 	private func executablePath() -> IO<String> {
@@ -89,7 +89,7 @@ struct Program {
 		).map { _ in }
 	}
 
-    private func printRepeatingCharacter(_ char: Character, count: Int, color: TerminalForegroundColor = .blue) -> IO<Void> {
+    private func printRepeatingCharacter(_ char: Character, count: Int, color: TerminalColor = .accentColor) -> IO<Void> {
 		IO { print(String(repeating: char, count: count).textColor(color)) }
 	}
 
@@ -108,20 +108,20 @@ struct Program {
 			acc.5 += fileInfo.linecount
 		}
 
-        return lineSeparator().flatMap {
-            IO {
+		return IO {
+				let width = 30
+				Console.output(filetype.description, color: .white, lineWidth: width)
+				Console.output("classes:", data: classes, color: .classColor, width: width)
+				Console.output("\(filetype.structs.trimEnd):", data: structs, color: .structColor, width: width)
+				Console.output("\(filetype.enums.trimEnd):", data: enums, color: .enumColor, width: width)
+				Console.output("functions:", data: functions, color: .functionColor, width: width)
+				Console.output("\(filetype.interfaces.trimEnd):", data: interfaces, color: .interfaceColor, width: width)
+				Console.output("files:", data: fileInfo.count, color: .fileColor, width: width)
+				Console.output("lines:", data: lines, color: .lineColor, width: width)
 
-				let repeatingLength = 28 - filetype.description.count
-				let title = filetype.description + String(repeating: " ", count: repeatingLength)
-				print(title.backgroundColor(.white) )
-				print("files :" + "\(fileInfo.count)".textColor(.blue))
-				print("lines :" + "\(lines)".textColor(.red))
-				print("classes :" + "\(classes)".textColor(.green))
-				print("\(filetype.structs):" + " \( structs)".textColor(.green))
-				print("\(filetype.enums) :" + "\(enums)".textColor(.cyan))
-				print("functions :" + "\(functions)".textColor(.white))
-				print("\(filetype.interfaces) : " + "\(interfaces)".textColor(.yellow))
-            }
+			if filetype != .all {
+				print("\r")
+			}
         }
 	}
 
@@ -159,13 +159,13 @@ struct Program {
                 let objcPercent =  rounding(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
 
                 if swiftPercent > 0 {
-					print("Swift :" + "\(swiftPercent)".textColor(.red) + "%")
+					print("Swift: ".textColor(.languageColor) + "\(swiftPercent) %".textColor(.accentColor))
                 }
                 if kotlinPercent > 0 {
-					print("Kotlin :" + "\(kotlinPercent)".textColor(.red) + "%")
+					print("Kotlin: ".textColor(.languageColor) + "\(kotlinPercent) %".textColor(.accentColor))
                 }
                 if objcPercent > 0 {
-					print("Objective-C :" + "\(objcPercent)".textColor(.red) + "%")
+					print("Objective-C: ".textColor(.languageColor) + "\(objcPercent) %".textColor(.accentColor))
                 }
             }
         }
@@ -189,7 +189,7 @@ struct Program {
 	}
 
 	private func outputTimemeasure(time: Double) -> IO<Void> {
-		IO { print("Total time: " + "\(time)".textColor(.red) + " seconds") }
+		IO { print("Total time: " + "\(time)".textColor(.accentColor) + " seconds") }
 	}
 
 	private func roundToDecimals(_ places: Double) -> (Double) -> IO<Double> {
