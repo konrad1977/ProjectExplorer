@@ -21,7 +21,7 @@ fileprivate extension Predicate where A == String {
 struct Program {
 
     private func lineSeparator(color: TerminalColor = .accentColor) -> IO<Void> {
-        printRepeatingCharacter("—", count: 30, color: color)
+        printRepeatingCharacter("—", count: 35, color: color)
     }
 
 	private func startProgramWithMessage(_ message: String) -> IO<Void> {
@@ -109,7 +109,7 @@ struct Program {
 		}
 
 		return IO {
-				let width = 30
+				let width = 35
 				Console.output(filetype.description, color: .white, lineWidth: width)
 				Console.output("classes:", data: classes, color: .classColor, width: width)
 				Console.output("\(filetype.structs.trimEnd):", data: structs, color: .structColor, width: width)
