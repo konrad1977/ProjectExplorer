@@ -25,7 +25,7 @@ enum TerminalColor: Int {
 	case functionColor = 248
 	case fileColor = 231
 	case lineColor = 203
-	case white = 100
+	case white = 15
 	case accentColor = 35
 	case barColor = 39
 	case languageColor = 37
