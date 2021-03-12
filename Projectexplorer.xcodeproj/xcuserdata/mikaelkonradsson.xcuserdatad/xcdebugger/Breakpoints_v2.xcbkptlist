@@ -3,4 +3,100 @@
    uuid = "44CABAA8-6FEF-481E-9CE5-B658AF23757B"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DB618B21-8F0C-48FE-8436-46BD847BD5D7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Projectexplorer/CodeAnalyser/CodeAnalyserCLI.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "printSummary(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9F0400DF-8C86-46CA-ACFB-708608BBC67A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Projectexplorer/CodeAnalyser/CLI/CodeAnalyserCLI.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "printSummary(_:statistics:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9F0400DF-8C86-46CA-ACFB-708608BBC67A - 64b00d54d36a3918"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static pinfo.CodeAnalyserCLI.printSummary(_: Swift.Array&lt;pinfo.LanguageSummary&gt;, statistics: Swift.Array&lt;pinfo.Statistics&gt;) -&gt; pinfo.IO&lt;()&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CLI/CodeAnalyserCLI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "36">
+               </Location>
+               <Location
+                  uuid = "9F0400DF-8C86-46CA-ACFB-708608BBC67A - c8f8c8c62ff77d4c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in static pinfo.CodeAnalyserCLI.printSummary(_: Swift.Array&lt;pinfo.LanguageSummary&gt;, statistics: Swift.Array&lt;pinfo.Statistics&gt;) -&gt; pinfo.IO&lt;()&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CLI/CodeAnalyserCLI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "9F0400DF-8C86-46CA-ACFB-708608BBC67A - 246716105cc36e77"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #2 (pinfo.LanguageSummary) -&gt; pinfo.IO&lt;()&gt; in implicit closure #1 (pinfo.CodeAnalyserCLI.Type) -&gt; (pinfo.LanguageSummary) -&gt; pinfo.IO&lt;()&gt; in closure #1 () -&gt; () in static pinfo.CodeAnalyserCLI.printSummary(_: Swift.Array&lt;pinfo.LanguageSummary&gt;, statistics: Swift.Array&lt;pinfo.Statistics&gt;) -&gt; pinfo.IO&lt;()&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CLI/CodeAnalyserCLI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "20">
+               </Location>
+               <Location
+                  uuid = "9F0400DF-8C86-46CA-ACFB-708608BBC67A - ce9f8ec20ad5f98c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (pinfo.IO&lt;()&gt;) -&gt; () in closure #1 () -&gt; () in static pinfo.CodeAnalyserCLI.printSummary(_: Swift.Array&lt;pinfo.LanguageSummary&gt;, statistics: Swift.Array&lt;pinfo.Statistics&gt;) -&gt; pinfo.IO&lt;()&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CLI/CodeAnalyserCLI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "29">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

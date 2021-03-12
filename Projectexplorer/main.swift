@@ -4,11 +4,13 @@ import Foundation
 	print(FileManager.default.currentDirectoryPath)
 #endif
 
+
 TimeCalculator.run {
-	CodeAnalyser().start(startPath: FileManager.default.currentDirectoryPath)
+	CodeAnalyser()
+		.start(startPath: FileManager.default.currentDirectoryPath)
+		.flatMap(CodeAnalyserCLI.printSummary)
 }
 .flatMap(Rounding.decimals(2))
-.flatMap(TimeCalculator.outputTimemeasure)
+.flatMap(CodeAnalyserCLI.printTime)
 .unsafeRun()
-
 

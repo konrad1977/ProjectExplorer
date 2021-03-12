@@ -1,5 +1,5 @@
 //
-//  Program.swift
+//  CodeAnalyser.swift
 //  Projectexplorer
 //
 //  Created by Mikael Konradsson on 2021-03-07.
@@ -19,14 +19,6 @@ fileprivate extension Predicate where A == String {
 }
 
 struct CodeAnalyser {
-
-    private func lineSeparator(color: TerminalColor = .accentColor) -> IO<Void> {
-        printRepeatingCharacter("—", count: 35, color: color)
-    }
-
-	private func startProgramWithMessage(_ message: String) -> IO<Void> {
-		IO { message.textColor(.accentColor) }
-	}
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
 		guard let paths = try? FileManager.default
@@ -72,18 +64,18 @@ struct CodeAnalyser {
 		IO { paths.map(createFileInfo).map { $0.unsafeRun() } }
 	}
 
-	private func summary(_ fileInfo: [Fileinfo]) -> IO<Void> {
-		zip(
-			createSummaryForLanguage(.swift, fileInfo: fileInfo).flatMap(printSummaryFor),
-			createSummaryForLanguage(.kotlin, fileInfo: fileInfo).flatMap(printSummaryFor),
-			createSummaryForLanguage(.objectiveC, fileInfo: fileInfo).flatMap(printSummaryFor),
-            outputTotalSummary(fileInfo),
-            lineSeparator()
-		).map { _ in }
-	}
+	private func createLanguageSummary(_ fileInfo: [Fileinfo]) -> IO<([LanguageSummary], [Statistics])> {
+		let filteredListFor = filterered(fileInfo)
+		let summary = zip(
+			createSummaryForLanguage(.swift, fileInfo: filteredListFor(.swift).unsafeRun()),
+			createSummaryForLanguage(.kotlin, fileInfo: filteredListFor(.kotlin).unsafeRun()),
+			createSummaryForLanguage(.objectiveC, fileInfo: filteredListFor(.objectiveC).unsafeRun()),
+			createSummaryForLanguage(.all, fileInfo: fileInfo)
+		).map { swift, kotlin, objc, all in
+			[swift, kotlin, objc, all]
+		}.unsafeRun()
 
-    private func printRepeatingCharacter(_ char: Character, count: Int, color: TerminalColor = .accentColor) -> IO<Void> {
-		IO { print(String(repeating: char, count: count).textColor(color)) }
+		return IO { (summary, LanguageSummary.statistics(from: summary)) }
 	}
 
 	private func createSummaryForLanguage(_ filetype: Filetype, fileInfo: [Fileinfo]) -> IO<LanguageSummary> {
@@ -114,87 +106,22 @@ struct CodeAnalyser {
 		}
 	}
 
-	private func printSummaryFor(_ language: LanguageSummary) -> IO<Void> {
-
-		guard language.filetype != .none
-		else { return IO { } }
-
-		return IO {
-				let width = 35
-				Console.output(language.filetype.description, color: .white, lineWidth: width)
-				Console.output("classes:", data: language.classes, color: .classColor, width: width)
-				Console.output("\(language.filetype.structs.trimEnd):", data: language.structs, color: .structColor, width: width)
-				Console.output("\(language.filetype.enums.trimEnd):", data: language.enums, color: .enumColor, width: width)
-				Console.output("functions:", data: language.functions, color: .functionColor, width: width)
-				Console.output("\(language.filetype.interfaces.trimEnd):", data: language.interfaces, color: .interfaceColor, width: width)
-				Console.output("files:", data: language.filecount, color: .fileColor, width: width)
-				Console.output("lines:", data: language.linecount, color: .lineColor, width: width)
-
-			if language.filetype != .all {
-				print("\r")
-			}
-        }
+	private func filterered(_ info: [Fileinfo]) -> (Filetype) -> IO<[Fileinfo]> {
+		return { filetype in IO { info.filter { $0.filetype == filetype } } }
 	}
 
-	private func createFilteredFileInfo(_ info: [Fileinfo]) -> (Filetype) -> IO<(Filetype, [Fileinfo])> {
-		return { filetype in IO { (filetype, info.filter { $0.filetype == filetype }) } }
-	}
-
-    private func outputTotalSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
-        zip(
-			createSummaryForLanguage(.all, fileInfo: fileInfo).flatMap(printSummaryFor),
-            printPercentSummary(fileInfo)
-        ).map { _ in }
-    }
-
-	private func printPercentSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
-
-        guard fileInfo.isEmpty == false
-        else { return IO<Void> {} }
-
-		let filterFilesFor = createFilteredFileInfo(fileInfo)
-		let (_, swift) = filterFilesFor(.swift).unsafeRun()
-		let (_ ,kotlin) = filterFilesFor(.kotlin).unsafeRun()
-		let (_, objc) = filterFilesFor(.objectiveC).unsafeRun()
-
-        let totalFiles = swift.count + kotlin.count + objc.count
-
-        guard totalFiles > 0
-        else { return IO<Void> {} }
-
-        return lineSeparator().flatMap {
-            IO {
-				let rounding = Rounding.decimals(1)
-                let swiftPercent = rounding(Double(swift.count) / Double(totalFiles) * 100).unsafeRun()
-                let kotlinPercent = rounding(Double(kotlin.count) / Double(totalFiles) * 100).unsafeRun()
-                let objcPercent =  rounding(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
-
-                if swiftPercent > 0 {
-					print("Swift: ".textColor(.languageColor) + "\(swiftPercent) %".textColor(.accentColor))
-                }
-                if kotlinPercent > 0 {
-					print("Kotlin: ".textColor(.languageColor) + "\(kotlinPercent) %".textColor(.accentColor))
-                }
-                if objcPercent > 0 {
-					print("Objective-C: ".textColor(.languageColor) + "\(objcPercent) %".textColor(.accentColor))
-                }
-            }
-        }
+	private func createStartPath(path: String) -> IO<String> {
+		return IO { path }
 	}
 }
 
 // MARK: - Public
 extension CodeAnalyser {
 
-	private func createStartPath(path: String) -> () -> IO<String> {
-		return { IO { path } }
-	}
-
-	func start(startPath: String) -> IO<Void> {
-		startProgramWithMessage("Analyzing current path. Stand by...")
-			.flatMap(createStartPath(path: startPath))
+	func start(startPath: String) -> IO<([LanguageSummary], [Statistics])> {
+		createStartPath(path: startPath)
 			.flatMap(subdirectoriesFromPath)
 			.flatMap(analyzeSubpaths)
-			.flatMap(summary)
+			.flatMap(createLanguageSummary)
 	}
 }

@@ -18,10 +18,6 @@ enum TimeCalculator {
 			return Double(nanoTime) / 1_000_000_000
 		}
 	}
-
-	static func outputTimemeasure(time: Double) -> IO<Void> {
-		IO { print("Total time: " + "\(time)".textColor(.accentColor) + " seconds") }
-	}
 }
 
 enum Rounding {
