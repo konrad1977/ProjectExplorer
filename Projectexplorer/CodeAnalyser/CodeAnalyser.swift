@@ -18,7 +18,7 @@ fileprivate extension Predicate where A == String {
 	}
 }
 
-struct Program {
+struct CodeAnalyser {
 
     private func lineSeparator(color: TerminalColor = .accentColor) -> IO<Void> {
         printRepeatingCharacter("—", count: 35, color: color)
@@ -26,13 +26,6 @@ struct Program {
 
 	private func startProgramWithMessage(_ message: String) -> IO<Void> {
 		IO { message.textColor(.accentColor) }
-	}
-
-	private func executablePath() -> IO<String> {
-        #if DEBUG
-            print(FileManager.default.currentDirectoryPath)
-        #endif
-		return IO { FileManager.default.currentDirectoryPath }
 	}
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
@@ -81,9 +74,9 @@ struct Program {
 
 	private func summary(_ fileInfo: [Fileinfo]) -> IO<Void> {
 		zip(
-			outputLanguageSummary(for: .swift)(fileInfo),
-			outputLanguageSummary(for: .kotlin)(fileInfo),
-			outputLanguageSummary(for: .objectiveC)(fileInfo),
+			createSummaryForLanguage(.swift, fileInfo: fileInfo).flatMap(printSummaryFor),
+			createSummaryForLanguage(.kotlin, fileInfo: fileInfo).flatMap(printSummaryFor),
+			createSummaryForLanguage(.objectiveC, fileInfo: fileInfo).flatMap(printSummaryFor),
             outputTotalSummary(fileInfo),
             lineSeparator()
 		).map { _ in }
@@ -93,10 +86,10 @@ struct Program {
 		IO { print(String(repeating: char, count: count).textColor(color)) }
 	}
 
-	private func printSummaryFor(_ filetype: Filetype, fileInfo: [Fileinfo]) -> IO<Void> {
+	private func createSummaryForLanguage(_ filetype: Filetype, fileInfo: [Fileinfo]) -> IO<LanguageSummary> {
 
 		guard fileInfo.count > 0
-		else { return IO { } }
+		else { return IO { .empty } }
 
 		let (classes, structs, enums, interfaces, functions, lines) = fileInfo.reduce(
 			into: (0, 0, 0, 0, 0, 0)) { acc, fileInfo in
@@ -107,19 +100,37 @@ struct Program {
 			acc.4 += fileInfo.functions
 			acc.5 += fileInfo.linecount
 		}
+		return IO {
+			LanguageSummary(
+				classes: classes,
+				structs: structs,
+				enums: enums,
+				interfaces: interfaces,
+				functions: functions,
+				linecount: lines,
+				filecount: fileInfo.count,
+				filetype: filetype
+			)
+		}
+	}
+
+	private func printSummaryFor(_ language: LanguageSummary) -> IO<Void> {
+
+		guard language.filetype != .none
+		else { return IO { } }
 
 		return IO {
 				let width = 35
-				Console.output(filetype.description, color: .white, lineWidth: width)
-				Console.output("classes:", data: classes, color: .classColor, width: width)
-				Console.output("\(filetype.structs.trimEnd):", data: structs, color: .structColor, width: width)
-				Console.output("\(filetype.enums.trimEnd):", data: enums, color: .enumColor, width: width)
-				Console.output("functions:", data: functions, color: .functionColor, width: width)
-				Console.output("\(filetype.interfaces.trimEnd):", data: interfaces, color: .interfaceColor, width: width)
-				Console.output("files:", data: fileInfo.count, color: .fileColor, width: width)
-				Console.output("lines:", data: lines, color: .lineColor, width: width)
+				Console.output(language.filetype.description, color: .white, lineWidth: width)
+				Console.output("classes:", data: language.classes, color: .classColor, width: width)
+				Console.output("\(language.filetype.structs.trimEnd):", data: language.structs, color: .structColor, width: width)
+				Console.output("\(language.filetype.enums.trimEnd):", data: language.enums, color: .enumColor, width: width)
+				Console.output("functions:", data: language.functions, color: .functionColor, width: width)
+				Console.output("\(language.filetype.interfaces.trimEnd):", data: language.interfaces, color: .interfaceColor, width: width)
+				Console.output("files:", data: language.filecount, color: .fileColor, width: width)
+				Console.output("lines:", data: language.linecount, color: .lineColor, width: width)
 
-			if filetype != .all {
+			if language.filetype != .all {
 				print("\r")
 			}
         }
@@ -131,7 +142,7 @@ struct Program {
 
     private func outputTotalSummary(_ fileInfo: [Fileinfo]) -> IO<Void> {
         zip(
-			printSummaryFor(.all, fileInfo: fileInfo),
+			createSummaryForLanguage(.all, fileInfo: fileInfo).flatMap(printSummaryFor),
             printPercentSummary(fileInfo)
         ).map { _ in }
     }
@@ -153,7 +164,7 @@ struct Program {
 
         return lineSeparator().flatMap {
             IO {
-				let rounding = roundToDecimals(1)
+				let rounding = Rounding.decimals(1)
                 let swiftPercent = rounding(Double(swift.count) / Double(totalFiles) * 100).unsafeRun()
                 let kotlinPercent = rounding(Double(kotlin.count) / Double(totalFiles) * 100).unsafeRun()
                 let objcPercent =  rounding(Double(objc.count) / Double(totalFiles) * 100).unsafeRun()
@@ -170,49 +181,20 @@ struct Program {
             }
         }
 	}
-
-    private func outputLanguageSummary(for filetype: Filetype ) -> ([Fileinfo]) -> IO<Void> {
-		return { fileInfo in
-			createFilteredFileInfo(fileInfo)(filetype)
-				.flatMap(printSummaryFor)
-		}
-    }
-
-	private func calculateTime(block: @escaping () -> IO<Void>) -> IO<Double> {
-		IO {
-			let start = DispatchTime.now()
-			block().unsafeRun()
-			let end = DispatchTime.now()
-			let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
-			return Double(nanoTime) / 1_000_000_000
-		}
-	}
-
-	private func outputTimemeasure(time: Double) -> IO<Void> {
-		IO { print("Total time: " + "\(time)".textColor(.accentColor) + " seconds") }
-	}
-
-	private func roundToDecimals(_ places: Double) -> (Double) -> IO<Double> {
-		return { value in
-			IO<Double> {
-				let divisor = pow(10.0, Double(places))
-				return (value * divisor).rounded() / divisor
-			}
-		}
-	}
 }
 
 // MARK: - Public
-extension Program {
-	func start() -> IO<Void> {
-		calculateTime {
-			startProgramWithMessage("Analyzing current path. Stand by...")
-				.flatMap(executablePath)
-				.flatMap(subdirectoriesFromPath)
-				.flatMap(analyzeSubpaths)
-				.flatMap(summary)
-		}
-		.flatMap(roundToDecimals(2))
-		.flatMap(outputTimemeasure)
+extension CodeAnalyser {
+
+	private func createStartPath(path: String) -> () -> IO<String> {
+		return { IO { path } }
+	}
+
+	func start(startPath: String) -> IO<Void> {
+		startProgramWithMessage("Analyzing current path. Stand by...")
+			.flatMap(createStartPath(path: startPath))
+			.flatMap(subdirectoriesFromPath)
+			.flatMap(analyzeSubpaths)
+			.flatMap(summary)
 	}
 }

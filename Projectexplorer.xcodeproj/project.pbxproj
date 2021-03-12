@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		C12F6D2825F6BD8E00D5F254 /* SourceFileAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12F6D2725F6BD8E00D5F254 /* SourceFileAnalysis.swift */; };
+		C14FFE9525FB8E4200D7D5DC /* LanguageSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14FFE9425FB8E4200D7D5DC /* LanguageSummary.swift */; };
+		C14FFE9E25FB92F300D7D5DC /* TimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14FFE9D25FB92F300D7D5DC /* TimeCalculator.swift */; };
+		C17C41BD25FB8A3B00C4446E /* Reader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17C41BC25FB8A3B00C4446E /* Reader.swift */; };
 		C18769B525F513D300AFACDC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769B425F513D300AFACDC /* main.swift */; };
 		C18769BE25F513E700AFACDC /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769BD25F513E700AFACDC /* IO.swift */; };
-		C18769C125F5143E00AFACDC /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769C025F5143E00AFACDC /* Program.swift */; };
+		C18769C125F5143E00AFACDC /* CodeAnalyser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769C025F5143E00AFACDC /* CodeAnalyser.swift */; };
 		C1995DDA25F95BD7009C387A /* ConsoleColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1995DD925F95BD7009C387A /* ConsoleColor.swift */; };
 		C1CD8FED25F54A5E006E3D4D /* PredicateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CD8FEC25F54A5E006E3D4D /* PredicateSet.swift */; };
 		C1CD8FF125F54B36006E3D4D /* Fileinfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CD8FF025F54B36006E3D4D /* Fileinfo.swift */; };
@@ -38,10 +41,13 @@
 
 /* Begin PBXFileReference section */
 		C12F6D2725F6BD8E00D5F254 /* SourceFileAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFileAnalysis.swift; sourceTree = "<group>"; };
+		C14FFE9425FB8E4200D7D5DC /* LanguageSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSummary.swift; sourceTree = "<group>"; };
+		C14FFE9D25FB92F300D7D5DC /* TimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCalculator.swift; sourceTree = "<group>"; };
+		C17C41BC25FB8A3B00C4446E /* Reader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reader.swift; sourceTree = "<group>"; };
 		C18769B125F513D300AFACDC /* pinfo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pinfo; sourceTree = BUILT_PRODUCTS_DIR; };
 		C18769B425F513D300AFACDC /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C18769BD25F513E700AFACDC /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
-		C18769C025F5143E00AFACDC /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
+		C18769C025F5143E00AFACDC /* CodeAnalyser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeAnalyser.swift; sourceTree = "<group>"; };
 		C1995DD925F95BD7009C387A /* ConsoleColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleColor.swift; sourceTree = "<group>"; };
 		C1CD8FEC25F54A5E006E3D4D /* PredicateSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredicateSet.swift; sourceTree = "<group>"; };
 		C1CD8FF025F54B36006E3D4D /* Fileinfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fileinfo.swift; sourceTree = "<group>"; };
@@ -66,6 +72,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C14FFE9225FB8E0300D7D5DC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C1F1415225F7EE84001AE8D7 /* Filetype */,
+				C1CD8FEC25F54A5E006E3D4D /* PredicateSet.swift */,
+				C1CD8FF025F54B36006E3D4D /* Fileinfo.swift */,
+				C14FFE9425FB8E4200D7D5DC /* LanguageSummary.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C17C41BB25FB8A2E00C4446E /* Monads */ = {
+			isa = PBXGroup;
+			children = (
+				C18769BD25F513E700AFACDC /* IO.swift */,
+				C17C41BC25FB8A3B00C4446E /* Reader.swift */,
+			);
+			path = Monads;
+			sourceTree = "<group>";
+		};
 		C18769A825F513D300AFACDC = {
 			isa = PBXGroup;
 			children = (
@@ -85,25 +111,24 @@
 		C18769B325F513D300AFACDC /* Projectexplorer */ = {
 			isa = PBXGroup;
 			children = (
-				C18769BC25F513DB00AFACDC /* Models */,
+				C18769BC25F513DB00AFACDC /* CodeAnalyser */,
 				C18769B425F513D300AFACDC /* main.swift */,
-				C18769C025F5143E00AFACDC /* Program.swift */,
 			);
 			path = Projectexplorer;
 			sourceTree = "<group>";
 		};
-		C18769BC25F513DB00AFACDC /* Models */ = {
+		C18769BC25F513DB00AFACDC /* CodeAnalyser */ = {
 			isa = PBXGroup;
 			children = (
+				C14FFE9225FB8E0300D7D5DC /* Models */,
+				C17C41BB25FB8A2E00C4446E /* Monads */,
 				C1995DD825F95BBF009C387A /* ColorOutput */,
-				C1F1415225F7EE84001AE8D7 /* Filetype */,
-				C1CD8FEC25F54A5E006E3D4D /* PredicateSet.swift */,
-				C18769BD25F513E700AFACDC /* IO.swift */,
-				C1CD8FF025F54B36006E3D4D /* Fileinfo.swift */,
 				C12F6D2725F6BD8E00D5F254 /* SourceFileAnalysis.swift */,
 				C1F32C1B25F8058700410BB2 /* SubString+count.swift */,
+				C18769C025F5143E00AFACDC /* CodeAnalyser.swift */,
+				C14FFE9D25FB92F300D7D5DC /* TimeCalculator.swift */,
 			);
-			path = Models;
+			path = CodeAnalyser;
 			sourceTree = "<group>";
 		};
 		C1995DD825F95BBF009C387A /* ColorOutput */ = {
@@ -193,13 +218,16 @@
 				C18769BE25F513E700AFACDC /* IO.swift in Sources */,
 				C1CD8FF125F54B36006E3D4D /* Fileinfo.swift in Sources */,
 				C1F1415425F7EEAA001AE8D7 /* Filetype+description.swift in Sources */,
+				C14FFE9525FB8E4200D7D5DC /* LanguageSummary.swift in Sources */,
 				C1F1415725F7F032001AE8D7 /* Filetype+interfaces.swift in Sources */,
+				C14FFE9E25FB92F300D7D5DC /* TimeCalculator.swift in Sources */,
 				C1995DDA25F95BD7009C387A /* ConsoleColor.swift in Sources */,
+				C17C41BD25FB8A3B00C4446E /* Reader.swift in Sources */,
 				C1F1415A25F7F39B001AE8D7 /* Filetype+classes.swift in Sources */,
 				C1F32C1C25F8058700410BB2 /* SubString+count.swift in Sources */,
 				C1D9E1DB25F8B715002C5979 /* Filetype+enums.swift in Sources */,
 				C1CD8FED25F54A5E006E3D4D /* PredicateSet.swift in Sources */,
-				C18769C125F5143E00AFACDC /* Program.swift in Sources */,
+				C18769C125F5143E00AFACDC /* CodeAnalyser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
