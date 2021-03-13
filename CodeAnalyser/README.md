@@ -19,7 +19,7 @@ CodeAnalyser is completely lazy, its not until you run
 will the code be evaluated. 
 	
 
-###### Gettings the result
+###### Gettings the result with statistics and summary
 
 ```swift
 let (languageSummary: [LanguageSummary], statistics: [Statistics]) = CodeAnalyser()
@@ -27,7 +27,45 @@ let (languageSummary: [LanguageSummary], statistics: [Statistics]) = CodeAnalyse
 	.unsafeRun()
 ```
 
-###### Filetype
+
+###### Gettings the result as a fileinfo list
+Use this if you want to list all the files in a project and see statistics on a file level
+```swift
+let fileInfos: [FileInfo] = CodeAnalyser()
+	.start(startPath: "../somepath")
+	.unsafeRun()
+```
+
+###### FileInfo model
+```swift
+public struct Fileinfo {
+	public let filename: String
+	public let classes: Int
+	public let structs: Int
+	public let enums: Int
+	public let interfaces: Int
+	public let functions: Int
+	public let imports: Int
+	public let extensions: Int
+	public let linecount: Int
+	public let filetype: Filetype
+}
+```
+
+
+###### Analysing a singlefile
+
+```swift
+func analyseSourcefile(_ filename: String, data: String.SubSequence, filetype: Filetype) ->IO<Fileinfo>
+```
+Usage:
+Remember that data is a SubSequense of string. Access it by adding 'myString[...]'
+
+```swift
+let fileInfo = analyseSourcefile("AppDelegate.swift", data: fileData, filetype: .swift).unsafeRun()
+```
+
+###### Filetype Model
 An enum to show wich language (or all/none)
 ```swift
 public enum Filetype {
@@ -39,7 +77,7 @@ public enum Filetype {
 }
 ```
 
-###### Language Summary
+###### Language Summary Model
 Language Summary holds the information about every language. 
 Filetype will tell you which language it is.
 ```swift
@@ -57,7 +95,7 @@ public struct LanguageSummary {
 }
 ```
 
-###### Statistics
+###### Statistics Model
 Will return the percentage based on linecount.  Filetype will tell you which language it is.
 ```swift
 public struct Statistics {
