@@ -12,11 +12,11 @@ CodeAnalyser()
 ```
 
 ###### Lazy evaluation
-Code analyser is completely lazy, its not until you run
+CodeAnalyser is completely lazy, its not until you run
 ```swift
 .unsafeRun()
 ```
-the code will be evaluated. 
+will the code be evaluated. 
 
 
 ###### Gettings the result
@@ -25,4 +25,32 @@ the code will be evaluated.
 let (languageSummary: [LanguageSummary], statistics: [Statistics]) = CodeAnalyser()
 	.start(startPath: "../somepath")
 	.unsafeRun()
+```
+###### Language Summary
+Language Summary holds the information about every language. 
+Filetype will tell you which language it is.
+```swift
+public struct LanguageSummary {
+	public let classes: Int
+	public let structs: Int
+	public let enums: Int
+	public let interfaces: Int
+	public let functions: Int
+	public let imports: Int
+	public let extensions: Int
+	public let linecount: Int
+	public let filecount: Int
+	public let filetype: Filetype
+}
+```
+
+###### Statistics
+Will return the percentage based on linecount 
+Filetype will tell you which language it is.
+```swift
+public struct Statistics {
+	public let filetype: Filetype
+	public let lineCountPercentage: Double
+
+}
 ```
