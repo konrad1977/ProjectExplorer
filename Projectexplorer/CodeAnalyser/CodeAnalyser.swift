@@ -46,6 +46,8 @@ struct CodeAnalyser {
 					SourceFileAnalysis.countEnums(filetype: filetype)(source),
 					SourceFileAnalysis.countInterfaces(filetype: filetype)(source),
 					SourceFileAnalysis.countFunctions(filetype: filetype)(source),
+					SourceFileAnalysis.countImports(filetype: filetype)(source),
+					SourceFileAnalysis.countExtensions(filetype: filetype)(source),
                     SourceFileAnalysis.countLinesIn(sourceFile: source),
 					IO<Filetype>.pure(filetype)
 				)
@@ -56,7 +58,7 @@ struct CodeAnalyser {
 	private func createFileInfo(_ path: String) -> IO<Fileinfo> {
 		let fileUrl = URL(fileURLWithPath: path)
 		let filetype = Filetype(extension: fileUrl.pathExtension)
-		let filename = fileUrl.deletingPathExtension().lastPathComponent
+		let filename = fileUrl.lastPathComponent
 		return analyzeSourceFile(path: path, filename: filename, filetype: filetype)
 	}
 
@@ -65,7 +67,9 @@ struct CodeAnalyser {
 	}
 
 	private func createLanguageSummary(_ fileInfo: [Fileinfo]) -> IO<([LanguageSummary], [Statistics])> {
+
 		let filteredListFor = filterered(fileInfo)
+
 		let summary = zip(
 			createSummaryForLanguage(.swift, fileInfo: filteredListFor(.swift).unsafeRun()),
 			createSummaryForLanguage(.kotlin, fileInfo: filteredListFor(.kotlin).unsafeRun()),
@@ -83,14 +87,16 @@ struct CodeAnalyser {
 		guard fileInfo.count > 0
 		else { return IO { .empty } }
 
-		let (classes, structs, enums, interfaces, functions, lines) = fileInfo.reduce(
-			into: (0, 0, 0, 0, 0, 0)) { acc, fileInfo in
+		let (classes, structs, enums, interfaces, functions, lines, imports, extensions) = fileInfo.reduce(
+			into: (0, 0, 0, 0, 0, 0, 0, 0)) { acc, fileInfo in
 			acc.0 += fileInfo.classes
 			acc.1 += fileInfo.structs
 			acc.2 += fileInfo.enums
 			acc.3 += fileInfo.interfaces
 			acc.4 += fileInfo.functions
 			acc.5 += fileInfo.linecount
+			acc.6 += fileInfo.imports
+			acc.7 += fileInfo.extensions
 		}
 		return IO {
 			LanguageSummary(
@@ -99,6 +105,8 @@ struct CodeAnalyser {
 				enums: enums,
 				interfaces: interfaces,
 				functions: functions,
+				imports: imports,
+				extensions: extensions,
 				linecount: lines,
 				filecount: fileInfo.count,
 				filetype: filetype

@@ -38,6 +38,8 @@ struct CodeAnalyserCLI {
 			Console.output("\(language.filetype.enums.trimEnd):", data: language.enums, color: .enumColor, width: width)
 			Console.output("functions:", data: language.functions, color: .functionColor, width: width)
 			Console.output("\(language.filetype.interfaces.trimEnd):", data: language.interfaces, color: .interfaceColor, width: width)
+			Console.output("\(language.filetype.imports)", data: language.imports, color: .functionColor, width: width)
+			Console.output("\(language.filetype.extensions)", data: language.extensions, color: .functionColor, width: width)
 			Console.output("files:", data: language.filecount, color: .fileColor, width: width)
 			Console.output("lines:", data: language.linecount, color: .lineColor, width: width)
 

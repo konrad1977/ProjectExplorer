@@ -13,6 +13,8 @@ struct LanguageSummary {
 	let enums: Int
 	let interfaces: Int
 	let functions: Int
+	let imports: Int
+	let extensions: Int
 	let linecount: Int
 	let filecount: Int
 	let filetype: Filetype
@@ -35,6 +37,8 @@ extension LanguageSummary {
 		enums: 0,
 		interfaces: 0,
 		functions: 0,
+		imports: 0,
+		extensions: 0,
 		linecount: 0,
 		filecount: 0,
 		filetype: .none

@@ -9,6 +9,14 @@ import Foundation
 
 enum SourceFileAnalysis {
 
+	static func countExtensions(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
+		{ str in IO { str.countInstances(of: filetype.extensions) } }
+	}
+
+	static func countImports(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
+		{ str in IO { str.countInstances(of: filetype.imports) } }
+	}
+
 	static func countFunctions(filetype: Filetype) -> (String.SubSequence) -> IO<Int> {
 		{ str in IO { str.countInstances(of: filetype.functions) } }
 	}

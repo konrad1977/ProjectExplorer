@@ -14,6 +14,8 @@
 		C18769BE25F513E700AFACDC /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769BD25F513E700AFACDC /* IO.swift */; };
 		C18769C125F5143E00AFACDC /* CodeAnalyser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769C025F5143E00AFACDC /* CodeAnalyser.swift */; };
 		C1995DDA25F95BD7009C387A /* ConsoleColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1995DD925F95BD7009C387A /* ConsoleColor.swift */; };
+		C1A5913325FCB9120065823F /* Filetype+imports.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A5913225FCB9120065823F /* Filetype+imports.swift */; };
+		C1A5913625FCBC5B0065823F /* Filetype+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A5913525FCBC5B0065823F /* Filetype+extensions.swift */; };
 		C1B428DC25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B428DB25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift */; };
 		C1CD8FED25F54A5E006E3D4D /* PredicateSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CD8FEC25F54A5E006E3D4D /* PredicateSet.swift */; };
 		C1CD8FF125F54B36006E3D4D /* Fileinfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CD8FF025F54B36006E3D4D /* Fileinfo.swift */; };
@@ -48,6 +50,8 @@
 		C18769BD25F513E700AFACDC /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
 		C18769C025F5143E00AFACDC /* CodeAnalyser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeAnalyser.swift; sourceTree = "<group>"; };
 		C1995DD925F95BD7009C387A /* ConsoleColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleColor.swift; sourceTree = "<group>"; };
+		C1A5913225FCB9120065823F /* Filetype+imports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Filetype+imports.swift"; sourceTree = "<group>"; };
+		C1A5913525FCBC5B0065823F /* Filetype+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Filetype+extensions.swift"; sourceTree = "<group>"; };
 		C1B428DB25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeAnalyserCLI.swift; sourceTree = "<group>"; };
 		C1CD8FEC25F54A5E006E3D4D /* PredicateSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredicateSet.swift; sourceTree = "<group>"; };
 		C1CD8FF025F54B36006E3D4D /* Fileinfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fileinfo.swift; sourceTree = "<group>"; };
@@ -110,6 +114,7 @@
 		C18769B325F513D300AFACDC /* Projectexplorer */ = {
 			isa = PBXGroup;
 			children = (
+				C1B428DE25FBB4CD0044F3D0 /* CLI */,
 				C18769BC25F513DB00AFACDC /* CodeAnalyser */,
 				C18769B425F513D300AFACDC /* main.swift */,
 			);
@@ -119,7 +124,6 @@
 		C18769BC25F513DB00AFACDC /* CodeAnalyser */ = {
 			isa = PBXGroup;
 			children = (
-				C1B428DE25FBB4CD0044F3D0 /* CLI */,
 				C14FFE9225FB8E0300D7D5DC /* Models */,
 				C17C41BB25FB8A2E00C4446E /* Monads */,
 				C12F6D2725F6BD8E00D5F254 /* SourceFileAnalysis.swift */,
@@ -157,6 +161,8 @@
 				C1F1415925F7F39A001AE8D7 /* Filetype+classes.swift */,
 				C1D9E1DA25F8B715002C5979 /* Filetype+enums.swift */,
 				C1D9E1DD25F8B80D002C5979 /* Filetype+structs.swift */,
+				C1A5913225FCB9120065823F /* Filetype+imports.swift */,
+				C1A5913525FCBC5B0065823F /* Filetype+extensions.swift */,
 			);
 			path = Filetype;
 			sourceTree = "<group>";
@@ -231,9 +237,11 @@
 				C14FFE9E25FB92F300D7D5DC /* TimeCalculator.swift in Sources */,
 				C1995DDA25F95BD7009C387A /* ConsoleColor.swift in Sources */,
 				C1F1415A25F7F39B001AE8D7 /* Filetype+classes.swift in Sources */,
+				C1A5913325FCB9120065823F /* Filetype+imports.swift in Sources */,
 				C1F32C1C25F8058700410BB2 /* SubString+count.swift in Sources */,
 				C1D9E1DB25F8B715002C5979 /* Filetype+enums.swift in Sources */,
 				C1CD8FED25F54A5E006E3D4D /* PredicateSet.swift in Sources */,
+				C1A5913625FCBC5B0065823F /* Filetype+extensions.swift in Sources */,
 				C1B428DC25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift in Sources */,
 				C18769C125F5143E00AFACDC /* CodeAnalyser.swift in Sources */,
 			);

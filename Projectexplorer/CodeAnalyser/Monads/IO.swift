@@ -100,3 +100,34 @@ func zip<A, B, C, D, E, F, G, H>(
 	zip(first, zip(second, third, forth, fifth, sixth, seventh, eigth))
 		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5, $1.6) }
 }
+
+func zip<A, B, C, D, E, F, G, H, I>(
+	_ first: IO<A>,
+	_ second: IO<B>,
+	_ third: IO<C>,
+	_ forth: IO<D>,
+	_ fifth: IO<E>,
+	_ sixth: IO<F>,
+	_ seventh: IO<G>,
+	_ eigth: IO<H>,
+	_ ninth: IO<I>
+) -> IO<(A, B, C, D, E, F, G, H, I)> {
+	zip(first, zip(second, third, forth, fifth, sixth, seventh, eigth, ninth))
+		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5, $1.6, $1.7) }
+}
+
+func zip<A, B, C, D, E, F, G, H, I, J>(
+	_ first: IO<A>,
+	_ second: IO<B>,
+	_ third: IO<C>,
+	_ forth: IO<D>,
+	_ fifth: IO<E>,
+	_ sixth: IO<F>,
+	_ seventh: IO<G>,
+	_ eigth: IO<H>,
+	_ ninth: IO<I>,
+	_ tenth: IO<J>
+) -> IO<(A, B, C, D, E, F, G, H, I, J)> {
+	zip(first, zip(second, third, forth, fifth, sixth, seventh, eigth, ninth, tenth))
+		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5, $1.6, $1.7, $1.8) }
+}

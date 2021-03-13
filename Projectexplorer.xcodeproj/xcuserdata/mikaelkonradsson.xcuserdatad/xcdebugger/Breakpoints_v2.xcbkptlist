@@ -32,8 +32,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "17"
             endingLineNumber = "17"
-            landmarkName = "printSummary(_:statistics:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
             <Locations>
                <Location
                   uuid = "9F0400DF-8C86-46CA-ACFB-708608BBC67A - 64b00d54d36a3918"
@@ -96,6 +96,100 @@
                   offsetFromSymbolStart = "29">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4BDCE26A-85C5-4181-A042-E66E547051C6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Projectexplorer/CodeAnalyser/CodeAnalyser.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "analyzeSubpaths(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4BDCE26A-85C5-4181-A042-E66E547051C6 - a649121f76325c9e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "pinfo.CodeAnalyser.(analyzeSubpaths in _ACE322D6726610A5C864CB55B79ACE2D)(Swift.Array&lt;Swift.String&gt;) -&gt; pinfo.IO&lt;Swift.Array&lt;pinfo.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "24">
+               </Location>
+               <Location
+                  uuid = "4BDCE26A-85C5-4181-A042-E66E547051C6 - 78fbc4101e9bc22b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; Swift.Array&lt;pinfo.Fileinfo&gt; in pinfo.CodeAnalyser.(analyzeSubpaths in _ACE322D6726610A5C864CB55B79ACE2D)(Swift.Array&lt;Swift.String&gt;) -&gt; pinfo.IO&lt;Swift.Array&lt;pinfo.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "4BDCE26A-85C5-4181-A042-E66E547051C6 - 415c5cd637ef4d51"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #2 (Swift.String) -&gt; pinfo.IO&lt;pinfo.Fileinfo&gt; in implicit closure #1 (pinfo.CodeAnalyser) -&gt; (Swift.String) -&gt; pinfo.IO&lt;pinfo.Fileinfo&gt; in closure #1 () -&gt; Swift.Array&lt;pinfo.Fileinfo&gt; in pinfo.CodeAnalyser.(analyzeSubpaths in _ACE322D6726610A5C864CB55B79ACE2D)(Swift.Array&lt;Swift.String&gt;) -&gt; pinfo.IO&lt;Swift.Array&lt;pinfo.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "23">
+               </Location>
+               <Location
+                  uuid = "4BDCE26A-85C5-4181-A042-E66E547051C6 - d08dcded14ccce65"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (pinfo.IO&lt;pinfo.Fileinfo&gt;) -&gt; pinfo.Fileinfo in closure #1 () -&gt; Swift.Array&lt;pinfo.Fileinfo&gt; in pinfo.CodeAnalyser.(analyzeSubpaths in _ACE322D6726610A5C864CB55B79ACE2D)(Swift.Array&lt;Swift.String&gt;) -&gt; pinfo.IO&lt;Swift.Array&lt;pinfo.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/Projectexplorer/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "33">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "80FB98A5-6270-4812-8433-DC96ECA55530"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Projectexplorer/CodeAnalyser/CodeAnalyser.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "createLanguageSummary(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
