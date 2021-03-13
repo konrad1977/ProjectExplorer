@@ -30,9 +30,9 @@
 		C18769B125F513D300AFACDC /* pinfo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pinfo; sourceTree = BUILT_PRODUCTS_DIR; };
 		C18769B425F513D300AFACDC /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C1995DD925F95BD7009C387A /* ConsoleColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleColor.swift; sourceTree = "<group>"; };
-		C1A5915925FCC20A0065823F /* CodeAnalyser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CodeAnalyser; sourceTree = "<group>"; };
 		C1A5916525FCC5A00065823F /* String+trimend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+trimend.swift"; sourceTree = "<group>"; };
 		C1B428DB25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeAnalyserCLI.swift; sourceTree = "<group>"; };
+		C1D84FEC25FCE63300DB1711 /* CodeAnalyser */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CodeAnalyser; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +50,7 @@
 		C18769A825F513D300AFACDC = {
 			isa = PBXGroup;
 			children = (
-				C1A5915825FCC1F20065823F /* CodeAnalyser */,
+				C1D84FEC25FCE63300DB1711 /* CodeAnalyser */,
 				C18769B325F513D300AFACDC /* Projectexplorer */,
 				C18769B225F513D300AFACDC /* Products */,
 				C1A5916125FCC3930065823F /* Frameworks */,
@@ -81,14 +81,6 @@
 				C1A5916525FCC5A00065823F /* String+trimend.swift */,
 			);
 			path = ColorOutput;
-			sourceTree = "<group>";
-		};
-		C1A5915825FCC1F20065823F /* CodeAnalyser */ = {
-			isa = PBXGroup;
-			children = (
-				C1A5915925FCC20A0065823F /* CodeAnalyser */,
-			);
-			path = CodeAnalyser;
 			sourceTree = "<group>";
 		};
 		C1A5916125FCC3930065823F /* Frameworks */ = {

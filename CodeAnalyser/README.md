@@ -17,7 +17,7 @@ CodeAnalyser is completely lazy, its not until you run
 .unsafeRun()
 ```
 will the code be evaluated. 
-
+	
 
 ###### Gettings the result
 
