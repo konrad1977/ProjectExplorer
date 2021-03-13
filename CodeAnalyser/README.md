@@ -26,6 +26,19 @@ let (languageSummary: [LanguageSummary], statistics: [Statistics]) = CodeAnalyse
 	.start(startPath: "../somepath")
 	.unsafeRun()
 ```
+
+###### Filetype
+An enum to show wich language (or all/none)
+```swift
+public enum Filetype {
+	case all
+	case kotlin
+	case swift
+	case objectiveC
+	case none
+}
+```
+
 ###### Language Summary
 Language Summary holds the information about every language. 
 Filetype will tell you which language it is.
@@ -45,12 +58,10 @@ public struct LanguageSummary {
 ```
 
 ###### Statistics
-Will return the percentage based on linecount 
-Filetype will tell you which language it is.
+Will return the percentage based on linecount.  Filetype will tell you which language it is.
 ```swift
 public struct Statistics {
 	public let filetype: Filetype
 	public let lineCountPercentage: Double
-
 }
 ```
