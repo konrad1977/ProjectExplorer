@@ -6,19 +6,23 @@ A description of this package.
 
 ###### Create and Start
 
-`CodeAnalyser()
-	.start(startPath: "../somepath")`
-	
+```swift
+CodeAnalyser()
+	.start(startPath: "../somepath")
+```
 
 ###### Lazy evaluation
 Code analyser is completely lazy, its not until you run
-`.unsafeRun()` the code will be evaluated. 
+```swift
+.unsafeRun()```
+the code will be evaluated. 
 
 
 ###### Gettings the result
 
-`let (languageSummary: [LanguageSummary], statistics: [Statistics]) = CodeAnalyser()
+```swift
+let (languageSummary: [LanguageSummary], statistics: [Statistics]) = CodeAnalyser()
 	.start(startPath: "../somepath")
-	.unsafeRun()`
+	.unsafeRun()```
 
 
