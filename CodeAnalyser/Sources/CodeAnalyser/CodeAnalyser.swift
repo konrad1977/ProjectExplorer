@@ -134,10 +134,14 @@ extension CodeAnalyser {
 		.map(Fileinfo.init)
 	}
 
-	public func start(startPath: String) -> IO<([LanguageSummary], [Statistics])> {
+	public func start(startPath: String) -> IO<[Fileinfo]> {
 		createStartPath(path: startPath)
 			.flatMap(subdirectoriesFromPath)
 			.flatMap(analyzeSubpaths)
+	}
+
+	public func start(startPath: String) -> IO<([LanguageSummary], [Statistics])> {
+		self.start(startPath: startPath)
 			.flatMap(createLanguageSummary)
 	}
 }

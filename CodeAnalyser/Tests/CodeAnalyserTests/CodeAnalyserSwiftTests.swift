@@ -67,6 +67,11 @@ final class CodeAnalyserTests: XCTestCase {
 	}
 
     static var allTests = [
-        ("testExample", testEmptyResult),
+        ("emptyResult", testEmptyResult),
+		("imports", testAnalyserImportsSwift),
+		("extensions", testAnalyserExtensionsSwift),
+		("classes", testAnalyserClassesSwift),
+		("functions", testAnalyserFunctionsSwift),
+		("fullfile", testAnalyserFullFileSwift)
     ]
 }
