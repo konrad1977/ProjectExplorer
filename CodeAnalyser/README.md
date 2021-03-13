@@ -14,7 +14,8 @@ CodeAnalyser()
 ###### Lazy evaluation
 Code analyser is completely lazy, its not until you run
 ```swift
-.unsafeRun()```
+.unsafeRun()
+```
 the code will be evaluated. 
 
 
@@ -23,6 +24,5 @@ the code will be evaluated.
 ```swift
 let (languageSummary: [LanguageSummary], statistics: [Statistics]) = CodeAnalyser()
 	.start(startPath: "../somepath")
-	.unsafeRun()```
-
-
+	.unsafeRun()
+```
