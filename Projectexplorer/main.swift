@@ -1,4 +1,5 @@
 import Foundation
+import CodeAnalyser
 
 #if DEBUG
 	print(FileManager.default.currentDirectoryPath)

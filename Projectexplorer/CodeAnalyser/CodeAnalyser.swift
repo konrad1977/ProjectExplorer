@@ -18,7 +18,7 @@ fileprivate extension Predicate where A == String {
 	}
 }
 
-struct CodeAnalyser {
+public struct CodeAnalyser {
 
 	private func subdirectoriesFromPath(_ path: String) -> IO<[String]> {
 		guard let paths = try? FileManager.default
@@ -126,7 +126,9 @@ struct CodeAnalyser {
 // MARK: - Public
 extension CodeAnalyser {
 
-	func start(startPath: String) -> IO<([LanguageSummary], [Statistics])> {
+	public init () {}
+	
+	public func start(startPath: String) -> IO<([LanguageSummary], [Statistics])> {
 		createStartPath(path: startPath)
 			.flatMap(subdirectoriesFromPath)
 			.flatMap(analyzeSubpaths)
