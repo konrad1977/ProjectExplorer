@@ -40,21 +40,7 @@ public struct CodeAnalyser {
 
 	private func analyzeSourceFile(path: String, filename: String, filetype: Filetype) -> IO<Fileinfo> {
 		sourceFile(for: path)
-			.flatMap { source in
-				zip(
-					IO<String>.pure(filename),
-					SourceFileAnalysis.countClasses(filetype: filetype)(source),
-					SourceFileAnalysis.countStructs(filetype: filetype)(source),
-					SourceFileAnalysis.countEnums(filetype: filetype)(source),
-					SourceFileAnalysis.countInterfaces(filetype: filetype)(source),
-					SourceFileAnalysis.countFunctions(filetype: filetype)(source),
-					SourceFileAnalysis.countImports(filetype: filetype)(source),
-					SourceFileAnalysis.countExtensions(filetype: filetype)(source),
-					SourceFileAnalysis.countLinesIn(sourceFile: source),
-					IO<Filetype>.pure(filetype)
-				)
-				.map(Fileinfo.init)
-			}
+			.flatMap({ analyseSourcefile(filename, data: $0, filetype: filetype) })
 	}
 
 	private func createFileInfo(_ path: String) -> IO<Fileinfo> {
@@ -127,6 +113,26 @@ public struct CodeAnalyser {
 
 // MARK: - Public
 extension CodeAnalyser {
+
+	public func analyseSourcefile(
+		_ filename: String,
+		data: String.SubSequence,
+		filetype: Filetype
+	) -> IO<Fileinfo> {
+		zip(
+			IO<String>.pure(filename),
+			SourceFileAnalysis.countClasses(filetype: filetype)(data),
+			SourceFileAnalysis.countStructs(filetype: filetype)(data),
+			SourceFileAnalysis.countEnums(filetype: filetype)(data),
+			SourceFileAnalysis.countInterfaces(filetype: filetype)(data),
+			SourceFileAnalysis.countFunctions(filetype: filetype)(data),
+			SourceFileAnalysis.countImports(filetype: filetype)(data),
+			SourceFileAnalysis.countExtensions(filetype: filetype)(data),
+			SourceFileAnalysis.countLinesIn(sourceFile: data),
+			IO<Filetype>.pure(filetype)
+		)
+		.map(Fileinfo.init)
+	}
 
 	public func start(startPath: String) -> IO<([LanguageSummary], [Statistics])> {
 		createStartPath(path: startPath)

@@ -192,5 +192,85 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "551C060F-2F7B-4F36-A4F2-89D820FB7CFC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CodeAnalyser/Tests/CodeAnalyserTests/CodeAnalyserTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "8"
+            endingLineNumber = "8"
+            landmarkName = "testEmptyResult()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F41BB0CA-722D-4389-B312-96B927CBB752"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
+            landmarkName = "createSummaryForLanguage(_:fileInfo:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F41BB0CA-722D-4389-B312-96B927CBB752 - 5ee51d2267ae82d2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CodeAnalyser.CodeAnalyser.(createSummaryForLanguage in _214731DCECB88115082664FCF043B756)(_: CodeAnalyser.Filetype, fileInfo: Swift.Array&lt;CodeAnalyser.Fileinfo&gt;) -&gt; CodeAnalyser.IO&lt;CodeAnalyser.LanguageSummary&gt;"
+                  moduleName = "CodeAnalyserTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90"
+                  offsetFromSymbolStart = "1256">
+               </Location>
+               <Location
+                  uuid = "F41BB0CA-722D-4389-B312-96B927CBB752 - d12d0e3ba106a721"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; CodeAnalyser.LanguageSummary in CodeAnalyser.CodeAnalyser.(createSummaryForLanguage in _214731DCECB88115082664FCF043B756)(_: CodeAnalyser.Filetype, fileInfo: Swift.Array&lt;CodeAnalyser.Fileinfo&gt;) -&gt; CodeAnalyser.IO&lt;CodeAnalyser.LanguageSummary&gt;"
+                  moduleName = "CodeAnalyserTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "90"
+                  endingLineNumber = "90"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1F7E48E8-A2B6-48C7-9C78-D045506AB185"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CodeAnalyser/Tests/CodeAnalyserTests/CodeAnalyserTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "testAnalyserImportsSwift()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

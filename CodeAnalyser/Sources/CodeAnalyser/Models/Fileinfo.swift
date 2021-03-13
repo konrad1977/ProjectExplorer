@@ -7,17 +7,17 @@
 
 import Foundation
 
-struct Fileinfo {
-	let filename: String
-	let classes: Int
-	let structs: Int
-	let enums: Int
-	let interfaces: Int
-	let functions: Int
-	let imports: Int
-	let extensions: Int
-	let linecount: Int
-	let filetype: Filetype
+public struct Fileinfo {
+	public let filename: String
+	public let classes: Int
+	public let structs: Int
+	public let enums: Int
+	public let interfaces: Int
+	public let functions: Int
+	public let imports: Int
+	public let extensions: Int
+	public let linecount: Int
+	public let filetype: Filetype
 }
 
 extension Fileinfo {
