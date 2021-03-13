@@ -5,8 +5,7 @@
 import Foundation
 
 extension Filetype {
-
-    var structs: String {
+	public var structs: String {
         switch self {
         case .kotlin:
             return "data class "

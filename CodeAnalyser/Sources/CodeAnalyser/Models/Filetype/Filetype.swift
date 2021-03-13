@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Filetype {
+public enum Filetype {
 	case all
 	case kotlin
 	case swift

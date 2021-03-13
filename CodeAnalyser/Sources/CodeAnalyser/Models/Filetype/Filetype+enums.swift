@@ -5,8 +5,7 @@
 import Foundation
 
 extension Filetype {
-
-    var enums: String {
+	public var enums: String {
         switch self {
         case .kotlin:
             return "enum class "

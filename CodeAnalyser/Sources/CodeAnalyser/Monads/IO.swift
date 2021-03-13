@@ -7,32 +7,36 @@
 
 import Foundation
 
-struct IO<A> {
+public struct IO<A> {
 
-	let unsafeRun: () -> A
+	public let unsafeRun: () -> A
 
-	func map<B>(_ f: @escaping (A) -> B) -> IO<B> {
+	public init(_ run: @escaping () -> A) {
+		self.unsafeRun = run
+	}
+
+	public func map<B>(_ f: @escaping (A) -> B) -> IO<B> {
 		IO<B> { f(self.unsafeRun()) }
 	}
 
-	func flatMap<B>(_ f: @escaping (A) -> IO<B>) -> IO<B> {
+	public func flatMap<B>(_ f: @escaping (A) -> IO<B>) -> IO<B> {
 		IO<B> { f(self.unsafeRun()).unsafeRun() }
 	}
 }
 extension IO {
-	static func pure<A>(_ value: A) -> IO<A> {
+	public static func pure<A>(_ value: A) -> IO<A> {
 		IO<A> { value }
 	}
 }
 
-func zip<A, B>(
+public func zip<A, B>(
 	_ first: IO<A>,
 	_ second: IO<B>
 ) -> IO<(A, B)> {
 	IO { (first.unsafeRun(), second.unsafeRun()) }
 }
 
-func zip<A, B, C>(
+public func zip<A, B, C>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>
@@ -41,7 +45,7 @@ func zip<A, B, C>(
 		.map { ($0, $1.0, $1.1) }
 }
 
-func zip<A, B, C, D>(
+public func zip<A, B, C, D>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>,
@@ -51,7 +55,7 @@ func zip<A, B, C, D>(
 		.map { ($0, $1.0, $1.1, $1.2) }
 }
 
-func zip<A, B, C, D, E>(
+public func zip<A, B, C, D, E>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>,
@@ -62,7 +66,7 @@ func zip<A, B, C, D, E>(
 		.map { ($0, $1.0, $1.1, $1.2, $1.3) }
 }
 
-func zip<A, B, C, D, E, F>(
+public func zip<A, B, C, D, E, F>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>,
@@ -74,7 +78,7 @@ func zip<A, B, C, D, E, F>(
 		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4) }
 }
 
-func zip<A, B, C, D, E, F, G>(
+public func zip<A, B, C, D, E, F, G>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>,
@@ -87,7 +91,7 @@ func zip<A, B, C, D, E, F, G>(
 		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5) }
 }
 
-func zip<A, B, C, D, E, F, G, H>(
+public func zip<A, B, C, D, E, F, G, H>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>,
@@ -101,7 +105,7 @@ func zip<A, B, C, D, E, F, G, H>(
 		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5, $1.6) }
 }
 
-func zip<A, B, C, D, E, F, G, H, I>(
+public func zip<A, B, C, D, E, F, G, H, I>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>,
@@ -116,7 +120,7 @@ func zip<A, B, C, D, E, F, G, H, I>(
 		.map { ($0, $1.0, $1.1, $1.2, $1.3, $1.4, $1.5, $1.6, $1.7) }
 }
 
-func zip<A, B, C, D, E, F, G, H, I, J>(
+public func zip<A, B, C, D, E, F, G, H, I, J>(
 	_ first: IO<A>,
 	_ second: IO<B>,
 	_ third: IO<C>,

@@ -8,8 +8,7 @@
 import Foundation
 
 extension Filetype {
-
-	var classes: String {
+	public var classes: String {
 		switch self {
 		case .kotlin:
 			return "class "

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CodeAnalyser
 
 struct CodeAnalyserCLI {
 
@@ -21,7 +22,6 @@ struct CodeAnalyserCLI {
 				printPercentSummary(statistics),
 				lineSeparator()
 			).unsafeRun()
-			//printPercentSummary(statistics).unsafeRun()
 		}
 	}
 

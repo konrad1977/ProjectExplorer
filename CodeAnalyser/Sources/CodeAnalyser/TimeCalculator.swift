@@ -7,9 +7,9 @@
 
 import Foundation
 
-enum TimeCalculator {
+public enum TimeCalculator {
 
-	static func run(block: @escaping () -> IO<Void>) -> IO<Double> {
+	public static func run(block: @escaping () -> IO<Void>) -> IO<Double> {
 		IO {
 			let start = DispatchTime.now()
 			block().unsafeRun()
@@ -20,8 +20,8 @@ enum TimeCalculator {
 	}
 }
 
-enum Rounding {
-	static func decimals(_ places: Double) -> (Double) -> IO<Double> {
+public enum Rounding {
+	public static func decimals(_ places: Double) -> (Double) -> IO<Double> {
 		return { value in
 			IO<Double> {
 				let divisor = pow(10.0, Double(places))

@@ -3,12 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		C18769B525F513D300AFACDC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769B425F513D300AFACDC /* main.swift */; };
 		C1995DDA25F95BD7009C387A /* ConsoleColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1995DD925F95BD7009C387A /* ConsoleColor.swift */; };
+		C1A5916325FCC3930065823F /* CodeAnalyser in Frameworks */ = {isa = PBXBuildFile; productRef = C1A5916225FCC3930065823F /* CodeAnalyser */; };
+		C1A5916625FCC5A00065823F /* String+trimend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A5916525FCC5A00065823F /* String+trimend.swift */; };
 		C1B428DC25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B428DB25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +31,7 @@
 		C18769B425F513D300AFACDC /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C1995DD925F95BD7009C387A /* ConsoleColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleColor.swift; sourceTree = "<group>"; };
 		C1A5915925FCC20A0065823F /* CodeAnalyser */ = {isa = PBXFileReference; lastKnownFileType = folder; name = CodeAnalyser; sourceTree = "<group>"; };
+		C1A5916525FCC5A00065823F /* String+trimend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+trimend.swift"; sourceTree = "<group>"; };
 		C1B428DB25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeAnalyserCLI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -37,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A5916325FCC3930065823F /* CodeAnalyser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +53,7 @@
 				C1A5915825FCC1F20065823F /* CodeAnalyser */,
 				C18769B325F513D300AFACDC /* Projectexplorer */,
 				C18769B225F513D300AFACDC /* Products */,
+				C1A5916125FCC3930065823F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				C1995DD925F95BD7009C387A /* ConsoleColor.swift */,
+				C1A5916525FCC5A00065823F /* String+trimend.swift */,
 			);
 			path = ColorOutput;
 			sourceTree = "<group>";
@@ -83,6 +89,13 @@
 				C1A5915925FCC20A0065823F /* CodeAnalyser */,
 			);
 			path = CodeAnalyser;
+			sourceTree = "<group>";
+		};
+		C1A5916125FCC3930065823F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		C1B428DE25FBB4CD0044F3D0 /* CLI */ = {
@@ -110,6 +123,9 @@
 			dependencies = (
 			);
 			name = pinfo;
+			packageProductDependencies = (
+				C1A5916225FCC3930065823F /* CodeAnalyser */,
+			);
 			productName = Projectexplorer;
 			productReference = C18769B125F513D300AFACDC /* pinfo */;
 			productType = "com.apple.product-type.tool";
@@ -151,6 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A5916625FCC5A00065823F /* String+trimend.swift in Sources */,
 				C18769B525F513D300AFACDC /* main.swift in Sources */,
 				C1995DDA25F95BD7009C387A /* ConsoleColor.swift in Sources */,
 				C1B428DC25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift in Sources */,
@@ -323,6 +340,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C1A5916225FCC3930065823F /* CodeAnalyser */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CodeAnalyser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C18769A925F513D300AFACDC /* Project object */;
 }

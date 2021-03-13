@@ -7,22 +7,22 @@
 
 import Foundation
 
-struct LanguageSummary {
-	let classes: Int
-	let structs: Int
-	let enums: Int
-	let interfaces: Int
-	let functions: Int
-	let imports: Int
-	let extensions: Int
-	let linecount: Int
-	let filecount: Int
-	let filetype: Filetype
+public struct LanguageSummary {
+	public let classes: Int
+	public let structs: Int
+	public let enums: Int
+	public let interfaces: Int
+	public let functions: Int
+	public let imports: Int
+	public let extensions: Int
+	public let linecount: Int
+	public let filecount: Int
+	public let filetype: Filetype
 }
 
-struct Statistics {
-	let filetype: Filetype
-	let lineCountPercentage: Double
+public struct Statistics {
+	public let filetype: Filetype
+	public let lineCountPercentage: Double
 
 	fileprivate init(filetype: Filetype, percentage: Double) {
 		self.filetype = filetype

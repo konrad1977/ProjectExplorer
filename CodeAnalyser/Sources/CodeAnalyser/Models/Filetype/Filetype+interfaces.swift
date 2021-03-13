@@ -8,8 +8,7 @@
 import Foundation
 
 extension Filetype {
-
-	var interfaces: String {
+	public var interfaces: String {
 		switch self {
 		case .kotlin:
 			return "interface "

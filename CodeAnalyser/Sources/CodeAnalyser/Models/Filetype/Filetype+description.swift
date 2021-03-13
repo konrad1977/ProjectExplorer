@@ -8,7 +8,7 @@
 import Foundation
 
 extension Filetype {
-	var description: String {
+	public var description: String {
 		switch self {
 		case .kotlin:
 			return "Kotlin"
