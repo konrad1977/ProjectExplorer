@@ -119,19 +119,20 @@ extension CodeAnalyser {
 		filedata: String,
 		filetype: Filetype
 	) -> IO<Fileinfo> {
-		zip(
-			IO<String>.pure(filename),
-			SourceFileAnalysis.countClasses(filetype: filetype)(filedata[...]),
-			SourceFileAnalysis.countStructs(filetype: filetype)(filedata[...]),
-			SourceFileAnalysis.countEnums(filetype: filetype)(filedata[...]),
-			SourceFileAnalysis.countInterfaces(filetype: filetype)(filedata[...]),
-			SourceFileAnalysis.countFunctions(filetype: filetype)(filedata[...]),
-			SourceFileAnalysis.countImports(filetype: filetype)(filedata[...]),
-			SourceFileAnalysis.countExtensions(filetype: filetype)(filedata[...]),
-			SourceFileAnalysis.countLinesIn(sourceFile: filedata[...]),
-			IO<Filetype>.pure(filetype)
-		)
-		.map(Fileinfo.init)
+
+        let sourceData = filedata[...]
+        return zip(
+			IO(filename),
+			SourceFileAnalysis.countClasses(filetype: filetype)(sourceData),
+			SourceFileAnalysis.countStructs(filetype: filetype)(sourceData),
+			SourceFileAnalysis.countEnums(filetype: filetype)(sourceData),
+			SourceFileAnalysis.countInterfaces(filetype: filetype)(sourceData),
+			SourceFileAnalysis.countFunctions(filetype: filetype)(sourceData),
+			SourceFileAnalysis.countImports(filetype: filetype)(sourceData),
+			SourceFileAnalysis.countExtensions(filetype: filetype)(sourceData),
+			SourceFileAnalysis.countLinesIn(sourceFile: sourceData),
+            IO(filetype)
+		).map(Fileinfo.init)
 	}
 
 	public func start(startPath: String) -> IO<[Fileinfo]> {

@@ -24,7 +24,12 @@ public struct IO<A> {
 	}
 }
 extension IO {
-	public static func pure<A>(_ value: A) -> IO<A> {
+
+    public init(_ work: @autoclosure @escaping () -> A) {
+        self.unsafeRun = work
+    }
+
+    public static func pure<A>(_ value: A) -> IO<A> {
 		IO<A> { value }
 	}
 }
