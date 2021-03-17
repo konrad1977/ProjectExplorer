@@ -218,8 +218,8 @@
             filePath = "CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
             landmarkName = "createSummaryForLanguage(_:fileInfo:)"
             landmarkType = "7">
             <Locations>
@@ -275,31 +275,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "321B3CAC-A0B8-4466-A065-B70DD4303121"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CodeAnalyser/Sources/CodeAnalyser/SourceFileAnalysis.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
-            landmarkName = "countClasses(filetype:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7CF74E3B-24A6-4E88-9078-9E83555E90F5"
+            uuid = "C901FBE8-8EBC-479D-96D4-C3FC9704DEC3"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CodeAnalyser/Sources/CodeAnalyser/Monads/Deferred.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
+            startingLineNumber = "16"
+            endingLineNumber = "16"
             landmarkName = "init(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -307,33 +291,95 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F21DFC28-AFE0-45B0-A7AE-793DCDE95161"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "CodeAnalyser/Sources/CodeAnalyser/SourceFileAnalysis.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "countClasses(filetype:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5597D582-CFCE-476D-BD75-36DB4327DBC2"
+            uuid = "4C15C23E-AA2E-4F6A-9E28-4AA88C9E6EA1"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CodeAnalyser/Sources/CodeAnalyser/Monads/Deferred.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
-            landmarkName = "zip(_:_:_:_:_:_:_:_:_:_:)"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "zip(_:_:)"
             landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "54F61B85-9B5B-41AA-BC9A-9D1B7FBDE9B3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "analyzeSubpaths(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "54F61B85-9B5B-41AA-BC9A-9D1B7FBDE9B3 - c7967d32c4a81a32"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CodeAnalyser.CodeAnalyser.(analyzeSubpaths in _214731DCECB88115082664FCF043B756)(Swift.Array&lt;Swift.String&gt;) -&gt; CodeAnalyser.IO&lt;Swift.Array&lt;CodeAnalyser.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "24">
+               </Location>
+               <Location
+                  uuid = "54F61B85-9B5B-41AA-BC9A-9D1B7FBDE9B3 - bab286b6f20cd5db"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; Swift.Array&lt;CodeAnalyser.Fileinfo&gt; in CodeAnalyser.CodeAnalyser.(analyzeSubpaths in _214731DCECB88115082664FCF043B756)(Swift.Array&lt;Swift.String&gt;) -&gt; CodeAnalyser.IO&lt;Swift.Array&lt;CodeAnalyser.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "54F61B85-9B5B-41AA-BC9A-9D1B7FBDE9B3 - 4e807ebaffe7ce21"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #2 (Swift.String) -&gt; CodeAnalyser.IO&lt;CodeAnalyser.Fileinfo&gt; in implicit closure #1 (CodeAnalyser.CodeAnalyser) -&gt; (Swift.String) -&gt; CodeAnalyser.IO&lt;CodeAnalyser.Fileinfo&gt; in closure #1 () -&gt; Swift.Array&lt;CodeAnalyser.Fileinfo&gt; in CodeAnalyser.CodeAnalyser.(analyzeSubpaths in _214731DCECB88115082664FCF043B756)(Swift.Array&lt;Swift.String&gt;) -&gt; CodeAnalyser.IO&lt;Swift.Array&lt;CodeAnalyser.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "23">
+               </Location>
+               <Location
+                  uuid = "54F61B85-9B5B-41AA-BC9A-9D1B7FBDE9B3 - 576be06836e9066e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (CodeAnalyser.IO&lt;CodeAnalyser.Fileinfo&gt;) -&gt; CodeAnalyser.Fileinfo in closure #1 () -&gt; Swift.Array&lt;CodeAnalyser.Fileinfo&gt; in CodeAnalyser.CodeAnalyser.(analyzeSubpaths in _214731DCECB88115082664FCF043B756)(Swift.Array&lt;Swift.String&gt;) -&gt; CodeAnalyser.IO&lt;Swift.Array&lt;CodeAnalyser.Fileinfo&gt;&gt;"
+                  moduleName = "pinfo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mikaelkonradsson/Documents/git/Projectexplorer/CodeAnalyser/Sources/CodeAnalyser/CodeAnalyser.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "54"
+                  endingLineNumber = "54"
+                  offsetFromSymbolStart = "40">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

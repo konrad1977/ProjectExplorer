@@ -11,7 +11,7 @@ extension Substring {
 
 	func countInstances(of stringToFind: String) -> Int {
 		var count = 0
-		var searchRange: Range<String.Index>?
+		var searchRange: Range<Substring.Index>?
 		while let foundRange = range(of: stringToFind, options: [], range: searchRange) {
 			count += 1
 			searchRange = Range(uncheckedBounds: (lower: foundRange.upperBound, upper: endIndex))

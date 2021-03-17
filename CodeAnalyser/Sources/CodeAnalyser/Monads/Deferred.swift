@@ -10,6 +10,14 @@ public struct Deferred<A> {
         self.run = run
     }
 
+	public init(_ work: @autoclosure @escaping () -> A) {
+		self = Deferred { callback in
+			DispatchQueue.global().async {
+				callback(work())
+			}
+		}
+	}
+
     public func map<B>(_ f: @escaping (A) -> B) -> Deferred<B> {
         Deferred<B> { callback in
             self.run { callback(f($0)) }
@@ -24,13 +32,21 @@ public struct Deferred<A> {
 }
 
 extension Deferred {
-    public init(_ work: @autoclosure @escaping () -> A) {
-        self = Deferred { callback in
-            DispatchQueue.global().async {
-                callback(work())
-            }
-        }
-    }
+	public static func delayed(by interval: TimeInterval, work: @escaping () -> A ) -> Deferred {
+		return .init { callback in
+			DispatchQueue.global().asyncAfter(deadline: .now() + interval) {
+				callback(work())
+			}
+		}
+	}
+}
+
+public func deferred<A>(_ io: IO<A>) -> Deferred<A> {
+	Deferred(io.unsafeRun())
+}
+
+public func deferred<A>(_ value: A) -> Deferred<A> {
+	Deferred(value)
 }
 
 public func zip<A, B>(
@@ -41,6 +57,7 @@ public func zip<A, B>(
     return Deferred<(A, B)> { callback in
 
         let dispatchGroup = DispatchGroup()
+		let queue = DispatchQueue(label: "Deferred.Queue")
 
         var a: A?
         dispatchGroup.enter()
@@ -56,7 +73,9 @@ public func zip<A, B>(
             dispatchGroup.leave()
         }
 
-        dispatchGroup.notify(queue: .main) {
+		dispatchGroup.wait()
+
+        dispatchGroup.notify(queue: queue) {
             if let a = a, let b = b {
                 callback((a, b))
             }

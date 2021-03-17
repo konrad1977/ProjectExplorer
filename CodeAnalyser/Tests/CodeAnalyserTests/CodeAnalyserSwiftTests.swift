@@ -13,7 +13,7 @@ final class CodeAnalyserTests: XCTestCase {
 		let fileInfo = CodeAnalyser()
 			.analyseSourcefile(
 				"imports",
-				filedata: swiftImports,
+				filedata: swiftImports[...],
 				filetype: .swift
 			)
 		XCTAssertEqual(fileInfo.unsafeRun().imports, 2)
@@ -23,7 +23,7 @@ final class CodeAnalyserTests: XCTestCase {
 		let fileInfo = CodeAnalyser()
 			.analyseSourcefile(
 				"extensions",
-				filedata: extensions,
+				filedata: extensions[...],
 				filetype: .swift
 			)
 		XCTAssertEqual(fileInfo.unsafeRun().extensions, 3)
@@ -33,7 +33,7 @@ final class CodeAnalyserTests: XCTestCase {
 		let fileInfo = CodeAnalyser()
 			.analyseSourcefile(
 				"classes",
-				filedata: classes,
+				filedata: classes[...],
 				filetype: .swift
 			)
 		XCTAssertEqual(fileInfo.unsafeRun().classes, 2)
@@ -43,7 +43,7 @@ final class CodeAnalyserTests: XCTestCase {
 		let fileInfo = CodeAnalyser()
 			.analyseSourcefile(
 				"functions",
-				filedata: functions,
+				filedata: functions[...],
 				filetype: .swift
 			)
 		XCTAssertEqual(fileInfo.unsafeRun().functions, 3)
@@ -53,7 +53,7 @@ final class CodeAnalyserTests: XCTestCase {
 		let fileInfo = CodeAnalyser()
 			.analyseSourcefile(
 				"fullfile",
-				filedata: fullFile,
+				filedata: fullFile[...],
 				filetype: .swift
 			)
 		XCTAssertEqual(fileInfo.unsafeRun().imports, 1)

@@ -5,7 +5,6 @@ import CodeAnalyser
 	print(FileManager.default.currentDirectoryPath)
 #endif
 
-
 TimeCalculator.run {
 	CodeAnalyser()
 		.start(startPath: FileManager.default.currentDirectoryPath)

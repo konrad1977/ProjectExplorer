@@ -34,7 +34,7 @@ enum SourceFileAnalysis {
 					let structCount = str.countInstances(of: filetype.structs)
 					return str.countInstances(of: filetype.classes) - (enumCount + structCount)
 				default:
-                    return str.countInstances(of: filetype.classes)
+					return str.countInstances(of: filetype.classes)
 				}
 			}
 		}
