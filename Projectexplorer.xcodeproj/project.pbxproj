@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C1596A9D2605F6670013332B /* CodeAnalyser in Frameworks */ = {isa = PBXBuildFile; productRef = C1596A9C2605F6670013332B /* CodeAnalyser */; };
 		C18769B525F513D300AFACDC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18769B425F513D300AFACDC /* main.swift */; };
 		C1995DDA25F95BD7009C387A /* ConsoleColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1995DD925F95BD7009C387A /* ConsoleColor.swift */; };
-		C1A5916325FCC3930065823F /* CodeAnalyser in Frameworks */ = {isa = PBXBuildFile; productRef = C1A5916225FCC3930065823F /* CodeAnalyser */; };
 		C1A5916625FCC5A00065823F /* String+trimend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A5916525FCC5A00065823F /* String+trimend.swift */; };
 		C1B428DC25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B428DB25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift */; };
 /* End PBXBuildFile section */
@@ -32,7 +32,6 @@
 		C1995DD925F95BD7009C387A /* ConsoleColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleColor.swift; sourceTree = "<group>"; };
 		C1A5916525FCC5A00065823F /* String+trimend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+trimend.swift"; sourceTree = "<group>"; };
 		C1B428DB25FBAD5D0044F3D0 /* CodeAnalyserCLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeAnalyserCLI.swift; sourceTree = "<group>"; };
-		C1D84FEC25FCE63300DB1711 /* CodeAnalyser */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CodeAnalyser; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1A5916325FCC3930065823F /* CodeAnalyser in Frameworks */,
+				C1596A9D2605F6670013332B /* CodeAnalyser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,7 +49,6 @@
 		C18769A825F513D300AFACDC = {
 			isa = PBXGroup;
 			children = (
-				C1D84FEC25FCE63300DB1711 /* CodeAnalyser */,
 				C18769B325F513D300AFACDC /* Projectexplorer */,
 				C18769B225F513D300AFACDC /* Products */,
 				C1A5916125FCC3930065823F /* Frameworks */,
@@ -116,7 +114,7 @@
 			);
 			name = pinfo;
 			packageProductDependencies = (
-				C1A5916225FCC3930065823F /* CodeAnalyser */,
+				C1596A9C2605F6670013332B /* CodeAnalyser */,
 			);
 			productName = Projectexplorer;
 			productReference = C18769B125F513D300AFACDC /* pinfo */;
@@ -145,6 +143,9 @@
 				Base,
 			);
 			mainGroup = C18769A825F513D300AFACDC;
+			packageReferences = (
+				C1596A9B2605F6670013332B /* XCRemoteSwiftPackageReference "CodeAnalyser" */,
+			);
 			productRefGroup = C18769B225F513D300AFACDC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -333,9 +334,21 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		C1596A9B2605F6670013332B /* XCRemoteSwiftPackageReference "CodeAnalyser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/konrad1977/CodeAnalyser.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		C1A5916225FCC3930065823F /* CodeAnalyser */ = {
+		C1596A9C2605F6670013332B /* CodeAnalyser */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = C1596A9B2605F6670013332B /* XCRemoteSwiftPackageReference "CodeAnalyser" */;
 			productName = CodeAnalyser;
 		};
 /* End XCSwiftPackageProductDependency section */
