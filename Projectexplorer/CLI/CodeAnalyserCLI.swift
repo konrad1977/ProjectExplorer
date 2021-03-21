@@ -27,7 +27,7 @@ struct CodeAnalyserCLI {
 
 	static func printSummaryFor(_ language: LanguageSummary) -> IO<Void> {
 
-		guard language.filetype != .none
+		guard language.filetype != .empty
 		else { return IO { } }
 
 		return IO {
