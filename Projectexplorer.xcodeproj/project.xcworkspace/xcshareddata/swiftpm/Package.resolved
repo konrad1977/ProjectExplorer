@@ -6,7 +6,16 @@
         "repositoryURL": "https://github.com/konrad1977/CodeAnalyser.git",
         "state": {
           "branch": "main",
-          "revision": "ffb00c318f91782e102688acd08bd177f8da3b43",
+          "revision": "b5d581a844c86eec45dbe1f6767a67fafb4785b8",
+          "version": null
+        }
+      },
+      {
+        "package": "Funswift",
+        "repositoryURL": "https://github.com/konrad1977/funswift.git",
+        "state": {
+          "branch": "main",
+          "revision": "ce63cde48ec1742bac57a1c5502c4f59c6f7a0e7",
           "version": null
         }
       }

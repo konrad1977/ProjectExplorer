@@ -1,9 +1,9 @@
 import Foundation
 import CodeAnalyser
 
-//#if DEBUG
-//	print(FileManager.default.currentDirectoryPath)
-//#endif
+#if DEBUG
+	print(FileManager.default.currentDirectoryPath)
+#endif
 
 runProgram(args: CommandLine.arguments)
 
@@ -19,14 +19,24 @@ private func runProgram(args: [String]) {
         return
     }
 
-    let take = parseLineCount(args: argsWithoutBinary)
     let languages: Filetype = parseLanguages(args: argsWithoutBinary)
 
+    if hasLinecount(args: args) == false {
+        runProjectAnalytics(languages: languages)
+        return
+    }
+
+    let take = parseLineCount(args: argsWithoutBinary)
     runLinecount(take: take, languages: languages)
 }
 
 private func showHelp(args: [String]) -> Bool {
     let (first, _) = findArgumentIndicies(for: "--help", in: args)
+    return first != nil
+}
+
+private func hasLinecount(args: [String]) -> Bool {
+    let (first, _) = findArgumentIndicies(for: "--linecount", in: args)
     return first != nil
 }
 
@@ -68,10 +78,10 @@ private func findArgumentIndicies(for argv: String, in args: [String]) -> (first
     return (nil, nil)
 }
 
-private func runProjectAnalytics() {
+private func runProjectAnalytics(languages: Filetype = .all) {
     TimeCalculator.run {
         CodeAnalyser()
-            .statistics(from: FileManager.default.currentDirectoryPath)
+            .statistics(from: FileManager.default.currentDirectoryPath, language: languages)
             .flatMap(CodeAnalyserCLI.printSummary)
     }
     .flatMap(Rounding.decimals(2))

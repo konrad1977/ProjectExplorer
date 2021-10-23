@@ -7,6 +7,7 @@
 
 import Foundation
 import CodeAnalyser
+import Funswift
 
 struct CodeAnalyserCLI {
 
@@ -32,9 +33,17 @@ struct CodeAnalyserCLI {
 
 	static func printSummary(_ langs: [LanguageSummary], statistics: [Statistics]) -> IO<Void> {
 		IO {
-			langs.map(printSummaryFor).forEach { $0.unsafeRun() }
+            if langs.count == 2 {
+                langs
+                    .dropLast()
+                    .map(printSummaryFor)
+                    .forEach { $0.unsafeRun() }
+            } else {
+                langs.map(printSummaryFor)
+                    .forEach { $0.unsafeRun() }
+            }
 
-			_ = zip(
+            _ = zip(
 				printPercentSummary(statistics),
 				lineSeparator()
 			).unsafeRun()
@@ -58,10 +67,7 @@ struct CodeAnalyserCLI {
 			Console.output("\(language.filetype.extensions)", data: language.extensions, color: .functionColor, width: width)
 			Console.output("files:", data: language.filecount, color: .fileColor, width: width)
 			Console.output("lines:", data: language.linecount, color: .lineColor, width: width)
-
-			if language.filetype != .all {
-				print("\r")
-			}
+            Console.output("Avg lines:", data: language.linecount / language.filecount, color: .lineColor, width: width)
 		}
 	}
 
