@@ -60,7 +60,7 @@ private func parseLanguages(args: [String]) -> Filetype {
     let languages = Array(args.dropFirst(first + 1)).map { $0.lowercased() }
     if languages.contains(where: { $0 == "swift" }) {
         fileType.insert(.swift)
-    } else if (languages.contains(where: { $0 == "kotlin "})) {
+    } else if (languages.contains(where: { $0 == "kotlin" || $0 == "kt" })) {
         fileType.insert(.kotlin)
     } else if (languages.contains(where: { $0 == "objective-c" || $0 == "objc" || $0 == "objectivec" })) {
         fileType.insert(.objectiveC)
