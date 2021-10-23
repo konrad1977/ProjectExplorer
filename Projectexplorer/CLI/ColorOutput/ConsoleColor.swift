@@ -101,5 +101,12 @@ enum Console {
 		let space = String(repeating: " ", count: extraSpace)
 		print(title + space + text.textColor(color))
 	}
+
+    static func output(_ title: String, text: String, color: TerminalColor) {
+
+        guard title.count > 0
+        else { return }
+        print(title +  text.textColor(color))
+    }
 }
 

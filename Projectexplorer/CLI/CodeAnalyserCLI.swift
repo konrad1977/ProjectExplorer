@@ -14,6 +14,22 @@ struct CodeAnalyserCLI {
 		printRepeatingCharacter("—", count: 35, color: color)
 	}
 
+    static func printLargestFiles(take: Int) -> ([Fileinfo]) -> IO<Void> {
+        { fileInfo in
+            IO {
+                let largestFiles = fileInfo
+                    .sorted(by: { $0.linecount > $1.linecount })
+                    .prefix(take)
+                    .map { ($0.filename, $0.linecount)}
+
+                largestFiles.forEach { (name, count) in
+                    Console.output("\(name):", text: "\(count)", color: .lineColor)
+                }
+                Console.output("Total files:", text: "\(fileInfo.count)", color: .barColor)
+            }
+        }
+    }
+
 	static func printSummary(_ langs: [LanguageSummary], statistics: [Statistics]) -> IO<Void> {
 		IO {
 			langs.map(printSummaryFor).forEach { $0.unsafeRun() }
