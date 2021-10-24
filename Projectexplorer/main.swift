@@ -94,7 +94,7 @@ private func runProjectAnalytics(languages: Filetype = .all) {
 private func runLinecount(take: Int = 5, languages: Filetype = .all) {
     TimeCalculator.run {
         CodeAnalyser()
-            .fileInfo(from: FileManager.default.currentDirectoryPath, language: languages)
+            .fileLineInfo(from: FileManager.default.currentDirectoryPath, language: languages)
             .flatMap(CodeAnalyserCLI.printLargestFiles(take: take))
     }
     .flatMap(Rounding.decimals(2))

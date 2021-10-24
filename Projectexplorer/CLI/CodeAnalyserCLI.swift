@@ -15,7 +15,7 @@ struct CodeAnalyserCLI {
 		printRepeatingCharacter("—", count: 35, color: color)
 	}
 
-    static func printLargestFiles(take: Int) -> ([Fileinfo]) -> IO<Void> {
+    static func printLargestFiles(take: Int) -> ([FileLineInfo]) -> IO<Void> {
         { fileInfo in
             IO {
                 let largestFiles = fileInfo
@@ -23,8 +23,8 @@ struct CodeAnalyserCLI {
                     .prefix(take)
                     .map { ($0.path, $0.linecount)}
 
-                largestFiles.forEach { (name, count) in
-                    Console.output("\(name):", text: "\(count)", color: .lineColor)
+                largestFiles.forEach { (path, count) in
+                    Console.output("\(path):", text: "\(count)", color: .lineColor)
                 }
                 Console.output("Total files:", text: "\(fileInfo.count)", color: .barColor)
             }
