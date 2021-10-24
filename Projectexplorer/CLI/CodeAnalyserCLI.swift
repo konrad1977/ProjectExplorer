@@ -21,7 +21,7 @@ struct CodeAnalyserCLI {
                 let largestFiles = fileInfo
                     .sorted(by: { $0.linecount > $1.linecount })
                     .prefix(take)
-                    .map { ($0.filename, $0.linecount)}
+                    .map { ($0.path, $0.linecount)}
 
                 largestFiles.forEach { (name, count) in
                     Console.output("\(name):", text: "\(count)", color: .lineColor)
@@ -33,15 +33,14 @@ struct CodeAnalyserCLI {
 
 	static func printSummary(_ langs: [LanguageSummary], statistics: [Statistics]) -> IO<Void> {
 		IO {
-            if langs.count == 2 {
-                langs
-                    .dropLast()
-                    .map(printSummaryFor)
-                    .forEach { $0.unsafeRun() }
-            } else {
-                langs.map(printSummaryFor)
-                    .forEach { $0.unsafeRun() }
-            }
+			var langSummaries = langs
+			if langSummaries.count == 2 {
+				langSummaries = langSummaries.dropLast()
+			}
+
+			langSummaries
+				.map(printSummaryFor)
+				.forEach { $0.unsafeRun() }
 
             _ = zip(
 				printPercentSummary(statistics),
@@ -74,14 +73,14 @@ struct CodeAnalyserCLI {
 	private static func printPercentSummary(_ statistics: [Statistics]) -> IO<Void> {
 
 		guard statistics.isEmpty == false
-		else { return IO<Void> {} }
+		else { return IO {} }
 
 		return IO {
 
 			let rounding = Rounding.decimals(1)
 
 			statistics
-				.filter {$0.lineCountPercentage > 0 }
+				.filter { $0.lineCountPercentage > 0 }
 				.forEach { stat in
 					let percentage = rounding(stat.lineCountPercentage).unsafeRun()
 					lineSeparator().unsafeRun()
@@ -95,7 +94,11 @@ struct CodeAnalyserCLI {
 			}
 		}
 
-	private static func printRepeatingCharacter(_ char: Character, count: Int, color: TerminalColor = .accentColor) -> IO<Void> {
+	private static func printRepeatingCharacter(
+		_ char: Character,
+		count: Int,
+		color: TerminalColor = .accentColor
+	) -> IO<Void> {
 		IO { print(String(repeating: char, count: count).textColor(color)) }
 	}
 
