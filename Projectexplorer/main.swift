@@ -15,49 +15,57 @@ private func runProgram(args: [String]) {
     let argsWithoutBinary = Array(args.dropFirst())
 
     if showHelp(args: argsWithoutBinary) {
-        print("pinfo --[linecount n (top 'n' files)] [--lang languagename ('swift', 'kotlin', 'objc')] [--help]")
+        print("pinfo --[linecount n (top 'n' files)] [--lang languagename ('swift', 'kotlin', 'objc')] [--help] --exclude ['pods', 'SwiftPackages']")
         return
     }
 
     let languages: Filetype = parseLanguages(args: argsWithoutBinary)
+    let filters: PathFilter = parsePathfilter(args: argsWithoutBinary)
 
     if hasLinecount(args: args) == false {
-        runProjectAnalytics(languages: languages)
+        runProjectAnalytics(languages: languages, filter: filters)
         return
     }
 
     let take = parseLineCount(args: argsWithoutBinary)
-    runLinecount(take: take, languages: languages)
+    runLinecount(take: take, languages: languages, pathFilter: filters)
 }
 
 private func showHelp(args: [String]) -> Bool {
-    let (first, _) = findArgumentIndicies(for: "--help", in: args)
-    return first != nil
+    ArgumentParser(keyword: "--help", args: args).hasArgument()
 }
 
 private func hasLinecount(args: [String]) -> Bool {
-    let (first, _) = findArgumentIndicies(for: "--linecount", in: args)
-    return first != nil
+    ArgumentParser(keyword: "--linecount", args: args).hasArgument()
 }
 
 private func parseLineCount(args: [String]) -> Int {
-    let (first, _) = findArgumentIndicies(for: "--linecount", in: args)
-    guard let first = first, args.count >= first
+    let result = ArgumentParser(keyword: "--linecount", args: args).parse()
+
+    guard result.isEmpty == false, let count = result.first
     else { return 5 }
 
-    return Int(args[first + 1]) ?? 5
+    return Int(count) ?? 5
+}
+
+private func parsePathfilter(args: [String]) -> PathFilter {
+    let result = ArgumentParser(keyword: "--exclude", args: args).parse()
+
+    guard result.isEmpty == false
+    else { return .empty }
+
+    return .custom(result)
 }
 
 private func parseLanguages(args: [String]) -> Filetype {
 
-    let (first, _) = findArgumentIndicies(for: "--lang", in: args)
+    let languages = ArgumentParser(keyword: "--lang", args: args).parse()
 
-    guard let first = first
+    guard languages.isEmpty == false
     else { return .all }
 
     var fileType: Filetype = .empty
 
-    let languages = Array(args.dropFirst(first + 1)).map { $0.lowercased() }
     if languages.contains(where: { $0 == "swift" }) {
         fileType.insert(.swift)
     }
@@ -70,20 +78,10 @@ private func parseLanguages(args: [String]) -> Filetype {
     return fileType
 }
 
-private func findArgumentIndicies(for argv: String, in args: [String]) -> (first: Int?, last: Int?) {
-    if let first = args.firstIndex(of: argv) {
-        if let next = args.firstIndex(where: { $0 != argv && $0.hasPrefix("--")}) {
-            return (first, next)
-        }
-        return (first, nil)
-    }
-    return (nil, nil)
-}
-
-private func runProjectAnalytics(languages: Filetype = .all) {
+private func runProjectAnalytics(languages: Filetype = .all, filter: PathFilter = .empty) {
     TimeCalculator.run {
         CodeAnalyser()
-            .statistics(from: FileManager.default.currentDirectoryPath, language: languages)
+            .statistics(from: FileManager.default.currentDirectoryPath, language: languages, filter: filter)
             .flatMap(CodeAnalyserCLI.printSummary)
     }
     .flatMap(Rounding.decimals(2))
@@ -91,10 +89,10 @@ private func runProjectAnalytics(languages: Filetype = .all) {
     .unsafeRun()
 }
 
-private func runLinecount(take: Int = 5, languages: Filetype = .all) {
+private func runLinecount(take: Int = 5, languages: Filetype = .all, pathFilter: PathFilter = .empty) {
     TimeCalculator.run {
         CodeAnalyser()
-            .fileLineInfo(from: FileManager.default.currentDirectoryPath, language: languages)
+            .fileLineInfo(from: FileManager.default.currentDirectoryPath, language: languages, filter: pathFilter)
             .flatMap(CodeAnalyserCLI.printLargestFiles(take: take))
     }
     .flatMap(Rounding.decimals(2))
