@@ -11,9 +11,10 @@ import Funswift
 
 struct CodeAnalyserCLI {
 
-	private static func lineSeparator(color: TerminalColor = .accentColor) -> IO<Void> {
-		printRepeatingCharacter("—", count: 35, color: color)
-	}
+    // TODO: Should this be in this library?
+    static func printTime(_ value: Double) -> IO<Void> {
+        IO { print("Total time: " + "\(value)".textColor(.accentColor) + " seconds") }
+    }
 
     static func printLargestFiles(take: Int) -> ([FileLineInfo]) -> IO<Void> {
         { fileInfo in
@@ -70,39 +71,68 @@ struct CodeAnalyserCLI {
 		}
 	}
 
-	private static func printPercentSummary(_ statistics: [Statistics]) -> IO<Void> {
+    static func printTodoSummary(_ todos: [Todo]) -> IO<Void> {
+        IO {
+            todos.map(printTodo).forEach { $0.unsafeRun() }
+        }
+    }
+}
 
-		guard statistics.isEmpty == false
-		else { return IO {} }
+// MARK: - Private
+extension CodeAnalyserCLI {
 
-		return IO {
+    private static func printTodo(_ todo: Todo) -> IO<Void> {
+        IO {
+            printTodoComment(
+                for: todo.path,
+                comments: todo.comments
+            )
+            .unsafeRun()
+        }
+    }
 
-			let rounding = Rounding.decimals(1)
+    private static func printTodoComment(for file: String, comments: [Comment]) -> IO<Void> {
+        IO {
+            Console.output(text: file, color: .classColor)
+            comments.forEach { comment in
+                Console.output("  #\(comment.line):", text: comment.comment, color: .enumColor)
+            }
+        }
+    }
 
-			statistics
-				.filter { $0.lineCountPercentage > 0 }
-				.forEach { stat in
-					let percentage = rounding(stat.lineCountPercentage).unsafeRun()
-					lineSeparator().unsafeRun()
-					Console.output(
-						stat.filetype.description + " code",
-						text: "\(percentage) %",
-						color: .structColor,
-						width: 35
-					)
-				}
-			}
-		}
+    private static func printPercentSummary(_ statistics: [Statistics]) -> IO<Void> {
 
-	private static func printRepeatingCharacter(
-		_ char: Character,
-		count: Int,
-		color: TerminalColor = .accentColor
-	) -> IO<Void> {
-		IO { print(String(repeating: char, count: count).textColor(color)) }
-	}
+        guard statistics.isEmpty == false
+        else { return IO {} }
 
-	public static func printTime(_ value: Double) -> IO<Void> {
-		IO { print("Total time: " + "\(value)".textColor(.accentColor) + " seconds") }
-	}
+        return IO {
+
+            let rounding = Rounding.decimals(1)
+
+            statistics
+                .filter { $0.lineCountPercentage > 0 }
+                .forEach { stat in
+                    let percentage = rounding(stat.lineCountPercentage).unsafeRun()
+                    lineSeparator().unsafeRun()
+                    Console.output(
+                        stat.filetype.description + " code",
+                        text: "\(percentage) %",
+                        color: .structColor,
+                        width: 35
+                    )
+                }
+        }
+    }
+
+    private static func lineSeparator(color: TerminalColor = .accentColor) -> IO<Void> {
+        printRepeatingCharacter("—", count: 35, color: color)
+    }
+
+    private static func printRepeatingCharacter(
+        _ char: Character,
+        count: Int,
+        color: TerminalColor = .accentColor
+    ) -> IO<Void> {
+        IO { print(String(repeating: char, count: count).textColor(color)) }
+    }
 }

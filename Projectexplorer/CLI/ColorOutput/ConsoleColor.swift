@@ -108,5 +108,12 @@ enum Console {
         else { return }
         print(title +  text.textColor(color))
     }
+
+    static func output(text: String, color: TerminalColor) {
+
+        guard text.count > 0
+        else { return }
+        print(text.textColor(color))
+    }
 }
 

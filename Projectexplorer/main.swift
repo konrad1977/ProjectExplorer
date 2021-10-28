@@ -1,9 +1,9 @@
 import Foundation
 import CodeAnalyser
 
-#if DEBUG
-	print(FileManager.default.currentDirectoryPath)
-#endif
+//#if DEBUG
+//	print(FileManager.default.currentDirectoryPath)
+//#endif
 
 runProgram(args: CommandLine.arguments)
 
@@ -22,6 +22,11 @@ private func runProgram(args: [String]) {
     let languages: Filetype = parseLanguages(args: argsWithoutBinary)
     let filters: PathFilter = parsePathfilter(args: argsWithoutBinary)
 
+    if showTodo(args: argsWithoutBinary) {
+        runTodoAnalysis(language: languages, filter: filters)
+        return
+    }
+
     if hasLinecount(args: args) == false {
         runProjectAnalytics(languages: languages, filter: filters)
         return
@@ -29,6 +34,10 @@ private func runProgram(args: [String]) {
 
     let take = parseLineCount(args: argsWithoutBinary)
     runLinecount(take: take, languages: languages, pathFilter: filters)
+}
+
+private func showTodo(args: [String]) -> Bool {
+    ArgumentParser(keyword: "--todo", args: args).hasArgument()
 }
 
 private func showHelp(args: [String]) -> Bool {
@@ -40,42 +49,48 @@ private func hasLinecount(args: [String]) -> Bool {
 }
 
 private func parseLineCount(args: [String]) -> Int {
-    let result = ArgumentParser(keyword: "--linecount", args: args).parse()
-
-    guard result.isEmpty == false, let count = result.first
-    else { return 5 }
-
-    return Int(count) ?? 5
+    ArgumentParser(
+        keyword: "--linecount",
+        args: args
+    ).parse(default: 5) { Int($0.first ?? "5") ?? 5 }
 }
 
 private func parsePathfilter(args: [String]) -> PathFilter {
-    let result = ArgumentParser(keyword: "--exclude", args: args).parse()
-
-    guard result.isEmpty == false
-    else { return .empty }
-
-    return .custom(result)
+    ArgumentParser(
+        keyword: "--exclude",
+        args: args
+    ).parse(default: .empty) { .custom($0) }
 }
 
 private func parseLanguages(args: [String]) -> Filetype {
+    ArgumentParser(
+        keyword: "--lang",
+        args: args
+    ).parse(default: .all) {
+        var fileType: Filetype = .empty
 
-    let languages = ArgumentParser(keyword: "--lang", args: args).parse()
-
-    guard languages.isEmpty == false
-    else { return .all }
-
-    var fileType: Filetype = .empty
-
-    if languages.contains(where: { $0 == "swift" }) {
-        fileType.insert(.swift)
+        if $0.contains(where: { $0 == "swift" }) {
+            fileType.insert(.swift)
+        }
+        if $0.contains(where: { $0 == "kotlin" || $0 == "kt" }) {
+            fileType.insert(.kotlin)
+        }
+        if $0.contains(where: { $0 == "objective-c" || $0 == "objc" || $0 == "objectivec" }) {
+            fileType.insert(.objectiveC)
+        }
+        return fileType
     }
-    if (languages.contains(where: { $0 == "kotlin" || $0 == "kt" })) {
-        fileType.insert(.kotlin)
+}
+
+private func runTodoAnalysis(language: Filetype = .all, filter: PathFilter = .empty) {
+    TimeCalculator.run {
+        CodeAnalyser()
+            .todos(from: FileManager.default.currentDirectoryPath, language: language, filter: filter)
+            .flatMap(CodeAnalyserCLI.printTodoSummary)
     }
-    if (languages.contains(where: { $0 == "objective-c" || $0 == "objc" || $0 == "objectivec" })) {
-        fileType.insert(.objectiveC)
-    }
-    return fileType
+    .flatMap(Rounding.decimals(2))
+    .flatMap(CodeAnalyserCLI.printTime)
+    .unsafeRun()
 }
 
 private func runProjectAnalytics(languages: Filetype = .all, filter: PathFilter = .empty) {

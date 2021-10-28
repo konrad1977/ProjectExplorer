@@ -30,6 +30,15 @@ extension ArgumentParser {
         return Array(args[first + 1 ..< lastIndex])
             .map { $0.lowercased() }
     }
+
+    func parse<B>(default: B, _ f: @escaping ([String]) -> B) -> B {
+        let result = parse()
+
+        guard result.isEmpty == false
+        else { return `default` }
+
+        return f(result)
+    }
 }
 
 extension ArgumentParser {
